@@ -1,13 +1,23 @@
 package com.dta.repository;
 
 import com.dta.entity.DiaryEntry;
-import java.util.List;
+import com.dta.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.time.Instant;
+import java.util.Optional;
 
-public interface DiaryEntryRepository {
-    // TODO [Timmy]: Return entries per user with filters (range/status/distortion) and paging.
-    List<DiaryEntry> findAll();
-    // TODO [Timmy]: Persist diary entry and attach distortion classifications.
-    DiaryEntry save(DiaryEntry entry);
-    // TODO [Timmy]: Enforce owner checks before deleting the diary entry.
-    void deleteById(Long id);
+@Repository
+public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long> {
+
+    // Returns entries per user with paging and sorting support [cite: 109, 120]
+    Page<DiaryEntry> findByUser(User user, Pageable pageable);
+
+    // Filter by user and a date range [cite: 109]
+    Page<DiaryEntry> findByUserIdAndCreatedAtBetween(Long userId, Instant start, Instant end, Pageable pageable);
+
+    // Enforce owner checks by finding by ID and User [cite: 109]
+    Optional<DiaryEntry> findByIdAndUserId(Long id, Long userId);
 }
