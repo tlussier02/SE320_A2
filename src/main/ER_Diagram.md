@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     USER ||--o{ USER_SESSION : owns
     USER ||--o{ DIARY_ENTRY : writes
