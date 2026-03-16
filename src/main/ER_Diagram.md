@@ -36,3 +36,14 @@ erDiagram
         string phone
         string relation
     }
+    CHAT_MESSAGE {
+        long id PK
+        string role
+        text content
+        timestamp sent_at
+    }
+    CBT_SESSION {
+        long id PK
+        string focus_area
+        string session_state
+    }
