@@ -2,14 +2,20 @@ package com.dta.service;
 
 import com.dta.dto.request.CreateDiaryEntryRequest;
 import com.dta.dto.request.DistortionSuggestionRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface DiaryService {
-    // TODO [Timmy]: Validate diary payload and persist DiaryEntry + distortions metadata.
+    
+    // Validates payload and saves the entry with its distortion links
     void createDiaryEntry(CreateDiaryEntryRequest request);
-    // TODO [Timmy]: Retrieve diary entries for current user with paging/filter support.
-    Object getDiaryEntries();
-    // TODO [Timmy]: Delete diary entry and clean up related distortion associations.
+
+    // Retrieves entries for the current user with paging and filtering
+    Page<Object> getDiaryEntries(Pageable pageable);
+
+    // Deletes an entry and cleans up associations after owner verification
     void deleteDiaryEntry(Long id);
-    // TODO [Timmy]: Suggest distortions by invoking AI helper for text analysis.
+
+    // Invokes the AI helper to analyze text and suggest distortions
     Object suggestDistortions(DistortionSuggestionRequest request);
 }
