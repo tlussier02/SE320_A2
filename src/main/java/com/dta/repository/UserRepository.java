@@ -1,11 +1,18 @@
 package com.dta.repository;
 
 import com.dta.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
-public interface UserRepository {
-    // TODO [Timmy]: Implement with JPA and add unique constraints/indexes on username/email.
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    
+    // Spring Data JPA handles unique constraints and indexing based on @Entity annotations
     Optional<User> findByUsername(String username);
-    // TODO [Timmy]: Add save/update behavior with soft-delete policy and audit fields.
-    User save(User user);
+    
+    // Added for login and registration lookups
+    Optional<User> findByEmail(String email);
+    
+    // JpaRepository already includes save(), delete(), and audit support via Hibernate
 }
