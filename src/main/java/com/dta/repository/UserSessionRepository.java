@@ -2,13 +2,14 @@ package com.dta.repository;
 
 import com.dta.entity.UserSession;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserSessionRepository {
-    // TODO [Timmy]: Return sessions by authenticated user; support sorting and pagination.
-    List<UserSession> findAll();
-    // TODO [Timmy]: Fetch by session ID with full message lazy/eager loading.
-    Optional<UserSession> findById(String id);
-    // TODO [Timmy]: Persist session lifecycle transitions and timestamps.
-    UserSession save(UserSession session);
+public interface UserSessionRepository extends JpaRepository<UserSession, UUID> {
+
+    List<UserSession> findByUserIdOrderByStartedAtDesc(UUID userId);
+
+    long countByUserId(UUID userId);
+
+    long countByUserIdAndStatusIgnoreCase(UUID userId, String status);
 }

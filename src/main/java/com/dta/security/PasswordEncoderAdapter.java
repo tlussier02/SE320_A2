@@ -1,13 +1,22 @@
 package com.dta.security;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
 public class PasswordEncoderAdapter {
-    // TODO [Josh]: Wire Spring Security PasswordEncoder (BCrypt) and salt/hash workflow.
-    public String hash(String raw) {
-        return raw;
+
+    private final PasswordEncoder passwordEncoder;
+
+    public PasswordEncoderAdapter(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // TODO [Josh]: Compare raw password to stored hash using constant-time comparison.
+    public String hash(String raw) {
+        return passwordEncoder.encode(raw);
+    }
+
     public boolean matches(String raw, String hashed) {
-        return raw.equals(hashed);
+        return passwordEncoder.matches(raw, hashed);
     }
 }

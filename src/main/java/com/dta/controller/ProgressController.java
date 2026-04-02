@@ -1,9 +1,12 @@
 package com.dta.controller;
 
+import com.dta.dto.response.ProgressResponse;
 import com.dta.service.ProgressService;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -16,21 +19,18 @@ public class ProgressController {
         this.progressService = progressService;
     }
 
-    // TODO [Timmy]: Return strongly typed weekly progress response DTO.
     @GetMapping("/weekly")
-    public ResponseEntity<?> weekly() {
-        return ResponseEntity.ok(progressService.getWeeklyProgress());
+    public ResponseEntity<ProgressResponse> weekly(@RequestParam UUID userId) {
+        return ResponseEntity.ok(progressService.getWeeklyProgress(userId));
     }
 
-    // TODO [Timmy]: Return strongly typed monthly progress response DTO.
     @GetMapping("/monthly")
-    public ResponseEntity<?> monthly() {
-        return ResponseEntity.ok(progressService.getMonthlyProgress());
+    public ResponseEntity<ProgressResponse> monthly(@RequestParam UUID userId) {
+        return ResponseEntity.ok(progressService.getMonthlyProgress(userId));
     }
 
-    // TODO [Timmy]: Return burnout endpoint with trend data and recommendations.
     @GetMapping("/burnout")
-    public ResponseEntity<?> burnout() {
-        return ResponseEntity.ok(progressService.getBurnoutProgress());
+    public ResponseEntity<ProgressResponse> burnout(@RequestParam UUID userId) {
+        return ResponseEntity.ok(progressService.getBurnoutProgress(userId));
     }
 }

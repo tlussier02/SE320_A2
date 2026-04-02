@@ -2,14 +2,18 @@ package com.dta.service;
 
 import com.dta.dto.request.CreateDiaryEntryRequest;
 import com.dta.dto.request.DistortionSuggestionRequest;
+import com.dta.dto.response.DiaryEntryResponse;
+import com.dta.dto.response.ThoughtAnalysisResponse;
+import java.util.List;
+import java.util.UUID;
 
 public interface DiaryService {
-    // TODO [Timmy]: Validate diary payload and persist DiaryEntry + distortions metadata.
-    void createDiaryEntry(CreateDiaryEntryRequest request);
-    // TODO [Timmy]: Retrieve diary entries for current user with paging/filter support.
-    Object getDiaryEntries();
-    // TODO [Timmy]: Delete diary entry and clean up related distortion associations.
-    void deleteDiaryEntry(Long id);
-    // TODO [Timmy]: Suggest distortions by invoking AI helper for text analysis.
-    Object suggestDistortions(DistortionSuggestionRequest request);
+
+    DiaryEntryResponse createDiaryEntry(CreateDiaryEntryRequest request);
+
+    List<DiaryEntryResponse> getDiaryEntries(UUID userId);
+
+    void deleteDiaryEntry(UUID id);
+
+    ThoughtAnalysisResponse suggestDistortions(DistortionSuggestionRequest request);
 }

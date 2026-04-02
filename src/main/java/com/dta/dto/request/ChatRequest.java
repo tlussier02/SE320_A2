@@ -1,4 +1,19 @@
 package com.dta.dto.request;
 
-// TODO [Timmy]: Add validation annotations for non-empty message input.
-public record ChatRequest(String message) {}
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public class ChatRequest {
+
+    @NotBlank
+    @Size(max = 4000)
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}

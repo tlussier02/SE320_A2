@@ -1,10 +1,13 @@
 package com.dta.service;
 
+import com.dta.dto.response.ProgressResponse;
+import java.util.UUID;
+
 public interface ProgressService {
-    // TODO [Timmy]: Return weekly metrics from session and diary data.
-    Object getWeeklyProgress();
-    // TODO [Timmy]: Return monthly trend metrics from persistent progress snapshots.
-    Object getMonthlyProgress();
-    // TODO [Timmy]: Return burnout indicators and scorecard for reporting endpoint.
-    Object getBurnoutProgress();
+
+    ProgressResponse getWeeklyProgress(UUID userId);
+
+    ProgressResponse getMonthlyProgress(UUID userId);
+
+    ProgressResponse getBurnoutProgress(UUID userId);
 }

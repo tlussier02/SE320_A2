@@ -2,13 +2,18 @@ package com.dta.controller;
 
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.request.UpdateSafetyPlanRequest;
+import com.dta.dto.response.CrisisResponse;
+import com.dta.dto.response.SafetyPlanResponse;
 import com.dta.service.CrisisService;
+import jakarta.validation.Valid;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,27 +26,25 @@ public class CrisisController {
         this.crisisService = crisisService;
     }
 
-    // TODO [Timmy]: Return crisis status DTO based on active session risk + user data.
     @GetMapping
-    public ResponseEntity<?> crisisState() {
+    public ResponseEntity<CrisisResponse> crisisState() {
         return ResponseEntity.ok(crisisService.getCrisisOverview());
     }
 
-    // TODO [Trevor]: Use AI classification before returning crisis decision.
     @PostMapping("/detect")
-    public ResponseEntity<?> detect(@RequestBody DistortionSuggestionRequest request) {
+    public ResponseEntity<CrisisResponse> detect(
+            @Valid @RequestBody DistortionSuggestionRequest request) {
         return ResponseEntity.ok(crisisService.detectCrisis(request));
     }
 
-    // TODO [Timmy]: Return user-specific safety plan object.
     @GetMapping("/safety-plan")
-    public ResponseEntity<?> getSafetyPlan() {
-        return ResponseEntity.ok(crisisService.getSafetyPlan());
+    public ResponseEntity<SafetyPlanResponse> getSafetyPlan(@RequestParam UUID userId) {
+        return ResponseEntity.ok(crisisService.getSafetyPlan(userId));
     }
 
-    // TODO [Timmy]: Persist updated safety plan with validation and audit trail.
     @PutMapping("/safety-plan")
-    public ResponseEntity<?> updateSafetyPlan(@RequestBody UpdateSafetyPlanRequest request) {
+    public ResponseEntity<SafetyPlanResponse> updateSafetyPlan(
+            @Valid @RequestBody UpdateSafetyPlanRequest request) {
         return ResponseEntity.ok(crisisService.updateSafetyPlan(request));
     }
 }
