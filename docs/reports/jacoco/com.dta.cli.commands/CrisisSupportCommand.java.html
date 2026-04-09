@@ -24,36 +24,36 @@ public class CrisisSupportCommand implements Command {
 
     @Override
     public void execute() {
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (!state.isAuthenticated()) {</span>
-<span class="nc" id="L28">            System.out.println(&quot;Please login first.&quot;);</span>
-<span class="nc" id="L29">            return;</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (!state.isAuthenticated()) {</span>
+<span class="fc" id="L28">            System.out.println(&quot;Please login first.&quot;);</span>
+<span class="fc" id="L29">            return;</span>
         }
 
         while (true) {
-<span class="nc" id="L33">            CliPrompts.printHeader(&quot;Crisis Support&quot;);</span>
-<span class="nc" id="L34">            System.out.println(&quot;1. Detect Crisis Risk&quot;);</span>
-<span class="nc" id="L35">            System.out.println(&quot;2. Emergency Resources&quot;);</span>
-<span class="nc" id="L36">            System.out.println(&quot;3. View Safety Plan&quot;);</span>
-<span class="nc" id="L37">            System.out.println(&quot;4. Update Safety Plan&quot;);</span>
-<span class="nc" id="L38">            System.out.println(&quot;0. Back&quot;);</span>
+<span class="fc" id="L33">            CliPrompts.printHeader(&quot;Crisis Support&quot;);</span>
+<span class="fc" id="L34">            System.out.println(&quot;1. Detect Crisis Risk&quot;);</span>
+<span class="fc" id="L35">            System.out.println(&quot;2. Emergency Resources&quot;);</span>
+<span class="fc" id="L36">            System.out.println(&quot;3. View Safety Plan&quot;);</span>
+<span class="fc" id="L37">            System.out.println(&quot;4. Update Safety Plan&quot;);</span>
+<span class="fc" id="L38">            System.out.println(&quot;0. Back&quot;);</span>
 
-<span class="nc" id="L40">            String choice = CliPrompts.prompt(scanner, &quot;Select an option: &quot;);</span>
-<span class="nc bnc" id="L41" title="All 4 branches missed.">            if (choice == null || &quot;0&quot;.equals(choice)) {</span>
-<span class="nc" id="L42">                return;</span>
+<span class="fc" id="L40">            String choice = CliPrompts.prompt(scanner, &quot;Select an option: &quot;);</span>
+<span class="pc bpc" id="L41" title="1 of 4 branches missed.">            if (choice == null || &quot;0&quot;.equals(choice)) {</span>
+<span class="fc" id="L42">                return;</span>
             }
 
             try {
-<span class="nc bnc" id="L46" title="All 5 branches missed.">                switch (choice) {</span>
-<span class="nc" id="L47">                    case &quot;1&quot; -&gt; detectCrisis();</span>
-<span class="nc" id="L48">                    case &quot;2&quot; -&gt; emergencyResources();</span>
-<span class="nc" id="L49">                    case &quot;3&quot; -&gt; viewSafetyPlan();</span>
-<span class="nc" id="L50">                    case &quot;4&quot; -&gt; updateSafetyPlan();</span>
-<span class="nc" id="L51">                    default -&gt; System.out.println(&quot;Invalid option. Please try again.&quot;);</span>
+<span class="fc bfc" id="L46" title="All 5 branches covered.">                switch (choice) {</span>
+<span class="fc" id="L47">                    case &quot;1&quot; -&gt; detectCrisis();</span>
+<span class="fc" id="L48">                    case &quot;2&quot; -&gt; emergencyResources();</span>
+<span class="fc" id="L49">                    case &quot;3&quot; -&gt; viewSafetyPlan();</span>
+<span class="fc" id="L50">                    case &quot;4&quot; -&gt; updateSafetyPlan();</span>
+<span class="fc" id="L51">                    default -&gt; System.out.println(&quot;Invalid option. Please try again.&quot;);</span>
                 }
-<span class="nc" id="L53">            } catch (RuntimeException ex) {</span>
-<span class="nc" id="L54">                System.out.println(&quot;Crisis support error: &quot; + ex.getMessage());</span>
-<span class="nc" id="L55">            }</span>
-<span class="nc" id="L56">        }</span>
+<span class="fc" id="L53">            } catch (RuntimeException ex) {</span>
+<span class="fc" id="L54">                System.out.println(&quot;Crisis support error: &quot; + ex.getMessage());</span>
+<span class="fc" id="L55">            }</span>
+<span class="fc" id="L56">        }</span>
     }
 
     @Override
@@ -62,38 +62,38 @@ public class CrisisSupportCommand implements Command {
     }
 
     private void detectCrisis() {
-<span class="nc" id="L65">        DistortionSuggestionRequest request = new DistortionSuggestionRequest();</span>
-<span class="nc" id="L66">        request.setText(CliPrompts.prompt(scanner, &quot;Describe how you are feeling: &quot;));</span>
-<span class="nc" id="L67">        CrisisResponse response = crisisService.detectCrisis(request);</span>
-<span class="nc" id="L68">        System.out.println(&quot;Crisis: &quot; + response.isCrisis());</span>
-<span class="nc" id="L69">        System.out.println(&quot;Risk level: &quot; + response.getRiskLevel());</span>
-<span class="nc" id="L70">        System.out.println(&quot;Action: &quot; + response.getAction());</span>
-<span class="nc" id="L71">        System.out.println(&quot;Reasoning: &quot; + response.getReasoning());</span>
-<span class="nc bnc" id="L72" title="All 4 branches missed.">        if (response.getKeywordsDetected() != null &amp;&amp; !response.getKeywordsDetected().isEmpty()) {</span>
-<span class="nc" id="L73">            System.out.println(&quot;Detected keywords: &quot; + response.getKeywordsDetected());</span>
+<span class="fc" id="L65">        DistortionSuggestionRequest request = new DistortionSuggestionRequest();</span>
+<span class="fc" id="L66">        request.setText(CliPrompts.prompt(scanner, &quot;Describe how you are feeling: &quot;));</span>
+<span class="fc" id="L67">        CrisisResponse response = crisisService.detectCrisis(request);</span>
+<span class="fc" id="L68">        System.out.println(&quot;Crisis: &quot; + response.isCrisis());</span>
+<span class="fc" id="L69">        System.out.println(&quot;Risk level: &quot; + response.getRiskLevel());</span>
+<span class="fc" id="L70">        System.out.println(&quot;Action: &quot; + response.getAction());</span>
+<span class="fc" id="L71">        System.out.println(&quot;Reasoning: &quot; + response.getReasoning());</span>
+<span class="pc bpc" id="L72" title="2 of 4 branches missed.">        if (response.getKeywordsDetected() != null &amp;&amp; !response.getKeywordsDetected().isEmpty()) {</span>
+<span class="fc" id="L73">            System.out.println(&quot;Detected keywords: &quot; + response.getKeywordsDetected());</span>
         }
-<span class="nc" id="L75">    }</span>
+<span class="fc" id="L75">    }</span>
 
     private void emergencyResources() {
-<span class="nc" id="L78">        CrisisResponse overview = crisisService.getCrisisOverview();</span>
-<span class="nc" id="L79">        System.out.println(&quot;Emergency Resources&quot;);</span>
-<span class="nc" id="L80">        System.out.println(&quot;- Call or text 988 if immediate support is needed.&quot;);</span>
-<span class="nc" id="L81">        System.out.println(&quot;- Contact a trusted person or therapist.&quot;);</span>
-<span class="nc" id="L82">        System.out.println(&quot;- Current crisis state: &quot; + overview.getRiskLevel());</span>
-<span class="nc" id="L83">    }</span>
+<span class="fc" id="L78">        CrisisResponse overview = crisisService.getCrisisOverview();</span>
+<span class="fc" id="L79">        System.out.println(&quot;Emergency Resources&quot;);</span>
+<span class="fc" id="L80">        System.out.println(&quot;- Call or text 988 if immediate support is needed.&quot;);</span>
+<span class="fc" id="L81">        System.out.println(&quot;- Contact a trusted person or therapist.&quot;);</span>
+<span class="fc" id="L82">        System.out.println(&quot;- Current crisis state: &quot; + overview.getRiskLevel());</span>
+<span class="fc" id="L83">    }</span>
 
     private void viewSafetyPlan() {
-<span class="nc" id="L86">        SafetyPlanResponse response = crisisService.getSafetyPlan(state.getCurrentUserId());</span>
-<span class="nc" id="L87">        System.out.println(&quot;Current safety plan&quot;);</span>
-<span class="nc" id="L88">        System.out.println(response.getSafetyPlan());</span>
-<span class="nc" id="L89">    }</span>
+<span class="fc" id="L86">        SafetyPlanResponse response = crisisService.getSafetyPlan(state.getCurrentUserId());</span>
+<span class="fc" id="L87">        System.out.println(&quot;Current safety plan&quot;);</span>
+<span class="fc" id="L88">        System.out.println(response.getSafetyPlan());</span>
+<span class="fc" id="L89">    }</span>
 
     private void updateSafetyPlan() {
-<span class="nc" id="L92">        UpdateSafetyPlanRequest request = new UpdateSafetyPlanRequest();</span>
-<span class="nc" id="L93">        request.setUserId(state.getCurrentUserId());</span>
-<span class="nc" id="L94">        request.setSafetyPlan(CliPrompts.promptMultiline(scanner, &quot;Enter the updated safety plan&quot;));</span>
-<span class="nc" id="L95">        SafetyPlanResponse response = crisisService.updateSafetyPlan(request);</span>
-<span class="nc" id="L96">        System.out.println(&quot;Saved safety plan for user &quot; + response.getUserId());</span>
-<span class="nc" id="L97">    }</span>
+<span class="fc" id="L92">        UpdateSafetyPlanRequest request = new UpdateSafetyPlanRequest();</span>
+<span class="fc" id="L93">        request.setUserId(state.getCurrentUserId());</span>
+<span class="fc" id="L94">        request.setSafetyPlan(CliPrompts.promptMultiline(scanner, &quot;Enter the updated safety plan&quot;));</span>
+<span class="fc" id="L95">        SafetyPlanResponse response = crisisService.updateSafetyPlan(request);</span>
+<span class="fc" id="L96">        System.out.println(&quot;Saved safety plan for user &quot; + response.getUserId());</span>
+<span class="fc" id="L97">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

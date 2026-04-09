@@ -20,19 +20,19 @@ public class AuthController {
 
     private final AuthService authService;
 
-<span class="nc" id="L23">    public AuthController(AuthService authService) {</span>
-<span class="nc" id="L24">        this.authService = authService;</span>
-<span class="nc" id="L25">    }</span>
+<span class="fc" id="L23">    public AuthController(AuthService authService) {</span>
+<span class="fc" id="L24">        this.authService = authService;</span>
+<span class="fc" id="L25">    }</span>
 
     @PostMapping(&quot;/register&quot;)
     @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
-<span class="nc" id="L30">        return authService.register(request);</span>
+<span class="fc" id="L30">        return authService.register(request);</span>
     }
 
     @PostMapping(&quot;/login&quot;)
     public AuthResponse login(@Valid @RequestBody LoginRequest request) {
-<span class="nc" id="L35">        return authService.login(request);</span>
+<span class="fc" id="L35">        return authService.login(request);</span>
     }
 
     @PostMapping(&quot;/refresh&quot;)
@@ -42,8 +42,8 @@ public class AuthController {
 
     @PostMapping(&quot;/logout&quot;)
     public ResponseEntity&lt;Void&gt; logout(@Valid @RequestBody RefreshRequest request) {
-<span class="nc" id="L45">        authService.logout(request);</span>
-<span class="nc" id="L46">        return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L45">        authService.logout(request);</span>
+<span class="fc" id="L46">        return ResponseEntity.noContent().build();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

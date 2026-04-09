@@ -27,41 +27,41 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
-<span class="nc" id="L30">    public DiaryController(DiaryService diaryService) {</span>
-<span class="nc" id="L31">        this.diaryService = diaryService;</span>
-<span class="nc" id="L32">    }</span>
+<span class="fc" id="L30">    public DiaryController(DiaryService diaryService) {</span>
+<span class="fc" id="L31">        this.diaryService = diaryService;</span>
+<span class="fc" id="L32">    }</span>
 
     @PostMapping(&quot;/entries&quot;)
     @ResponseStatus(HttpStatus.CREATED)
     public DiaryEntryResponse createEntry(@Valid @RequestBody CreateDiaryEntryRequest request) {
-<span class="nc" id="L37">        return diaryService.createDiaryEntry(request);</span>
+<span class="fc" id="L37">        return diaryService.createDiaryEntry(request);</span>
     }
 
     @GetMapping(&quot;/entries&quot;)
     public ResponseEntity&lt;List&lt;DiaryEntryResponse&gt;&gt; getEntries(@RequestParam UUID userId) {
-<span class="nc" id="L42">        return ResponseEntity.ok(diaryService.getDiaryEntries(userId));</span>
+<span class="fc" id="L42">        return ResponseEntity.ok(diaryService.getDiaryEntries(userId));</span>
     }
 
     @GetMapping(&quot;/entries/{entryId}&quot;)
     public ResponseEntity&lt;DiaryEntryResponse&gt; getEntry(@PathVariable UUID entryId) {
-<span class="nc" id="L47">        return ResponseEntity.ok(diaryService.getDiaryEntry(entryId));</span>
+<span class="fc" id="L47">        return ResponseEntity.ok(diaryService.getDiaryEntry(entryId));</span>
     }
 
     @GetMapping(&quot;/insights&quot;)
     public ResponseEntity&lt;DiaryInsightsResponse&gt; getInsights(@RequestParam UUID userId) {
-<span class="nc" id="L52">        return ResponseEntity.ok(diaryService.getDiaryInsights(userId));</span>
+<span class="fc" id="L52">        return ResponseEntity.ok(diaryService.getDiaryInsights(userId));</span>
     }
 
     @DeleteMapping(&quot;/entries/{entryId}&quot;)
     public ResponseEntity&lt;Void&gt; deleteEntry(@PathVariable UUID entryId) {
-<span class="nc" id="L57">        diaryService.deleteDiaryEntry(entryId);</span>
-<span class="nc" id="L58">        return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L57">        diaryService.deleteDiaryEntry(entryId);</span>
+<span class="fc" id="L58">        return ResponseEntity.noContent().build();</span>
     }
 
     @PostMapping(&quot;/distortions/suggest&quot;)
     public ResponseEntity&lt;ThoughtAnalysisResponse&gt; suggest(
             @Valid @RequestBody DistortionSuggestionRequest request) {
-<span class="nc" id="L64">        return ResponseEntity.ok(diaryService.suggestDistortions(request));</span>
+<span class="fc" id="L64">        return ResponseEntity.ok(diaryService.suggestDistortions(request));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

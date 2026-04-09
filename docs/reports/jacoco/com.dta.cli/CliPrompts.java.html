@@ -10,50 +10,50 @@ public final class CliPrompts {
     }
 
     public static String prompt(Scanner scanner, String label) {
-<span class="nc" id="L13">        System.out.print(label);</span>
-<span class="nc bnc" id="L14" title="All 2 branches missed.">        if (!scanner.hasNextLine()) {</span>
+<span class="fc" id="L13">        System.out.print(label);</span>
+<span class="pc bpc" id="L14" title="1 of 2 branches missed.">        if (!scanner.hasNextLine()) {</span>
 <span class="nc" id="L15">            return null;</span>
         }
-<span class="nc" id="L17">        return scanner.nextLine().trim();</span>
+<span class="fc" id="L17">        return scanner.nextLine().trim();</span>
     }
 
     public static String promptMultiline(Scanner scanner, String label) {
-<span class="nc" id="L21">        System.out.println(label);</span>
-<span class="nc" id="L22">        System.out.println(&quot;Finish by entering a single line with END&quot;);</span>
-<span class="nc" id="L23">        StringBuilder builder = new StringBuilder();</span>
-<span class="nc bnc" id="L24" title="All 2 branches missed.">        while (scanner.hasNextLine()) {</span>
-<span class="nc" id="L25">            String line = scanner.nextLine();</span>
-<span class="nc bnc" id="L26" title="All 2 branches missed.">            if (&quot;END&quot;.equalsIgnoreCase(line.trim())) {</span>
-<span class="nc" id="L27">                break;</span>
+<span class="fc" id="L21">        System.out.println(label);</span>
+<span class="fc" id="L22">        System.out.println(&quot;Finish by entering a single line with END&quot;);</span>
+<span class="fc" id="L23">        StringBuilder builder = new StringBuilder();</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        while (scanner.hasNextLine()) {</span>
+<span class="fc" id="L25">            String line = scanner.nextLine();</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            if (&quot;END&quot;.equalsIgnoreCase(line.trim())) {</span>
+<span class="fc" id="L27">                break;</span>
             }
-<span class="nc bnc" id="L29" title="All 2 branches missed.">            if (builder.length() &gt; 0) {</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">            if (builder.length() &gt; 0) {</span>
 <span class="nc" id="L30">                builder.append('\n');</span>
             }
-<span class="nc" id="L32">            builder.append(line);</span>
-<span class="nc" id="L33">        }</span>
-<span class="nc" id="L34">        return builder.toString().trim();</span>
+<span class="fc" id="L32">            builder.append(line);</span>
+<span class="fc" id="L33">        }</span>
+<span class="fc" id="L34">        return builder.toString().trim();</span>
     }
 
     public static String promptPassword(Scanner scanner, String label) {
-<span class="nc" id="L38">        Console console = System.console();</span>
-<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (console != null) {</span>
+<span class="fc" id="L38">        Console console = System.console();</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (console != null) {</span>
 <span class="nc" id="L40">            char[] password = console.readPassword(&quot;%s&quot;, label);</span>
 <span class="nc bnc" id="L41" title="All 2 branches missed.">            return password == null ? null : new String(password);</span>
         }
-<span class="nc" id="L43">        return prompt(scanner, label);</span>
+<span class="fc" id="L43">        return prompt(scanner, label);</span>
     }
 
     public static UUID promptUuid(Scanner scanner, String label) {
-<span class="nc" id="L47">        String value = prompt(scanner, label);</span>
-<span class="nc bnc" id="L48" title="All 4 branches missed.">        if (value == null || value.isBlank()) {</span>
-<span class="nc" id="L49">            return null;</span>
+<span class="fc" id="L47">        String value = prompt(scanner, label);</span>
+<span class="pc bpc" id="L48" title="1 of 4 branches missed.">        if (value == null || value.isBlank()) {</span>
+<span class="fc" id="L49">            return null;</span>
         }
-<span class="nc" id="L51">        return UUID.fromString(value);</span>
+<span class="fc" id="L51">        return UUID.fromString(value);</span>
     }
 
     public static void printHeader(String title) {
-<span class="nc" id="L55">        System.out.println();</span>
-<span class="nc" id="L56">        System.out.println(&quot;== &quot; + title + &quot; ==&quot;);</span>
-<span class="nc" id="L57">    }</span>
+<span class="fc" id="L55">        System.out.println();</span>
+<span class="fc" id="L56">        System.out.println(&quot;== &quot; + title + &quot; ==&quot;);</span>
+<span class="fc" id="L57">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -23,25 +23,25 @@ public class SessionController {
 
     private final SessionService sessionService;
 
-<span class="nc" id="L26">    public SessionController(SessionService sessionService) {</span>
-<span class="nc" id="L27">        this.sessionService = sessionService;</span>
-<span class="nc" id="L28">    }</span>
+<span class="fc" id="L26">    public SessionController(SessionService sessionService) {</span>
+<span class="fc" id="L27">        this.sessionService = sessionService;</span>
+<span class="fc" id="L28">    }</span>
 
     @GetMapping(&quot;/{sessionId}&quot;)
     public ResponseEntity&lt;SessionResponse&gt; getSession(@PathVariable UUID sessionId) {
-<span class="nc" id="L32">        return ResponseEntity.ok(sessionService.getSession(sessionId));</span>
+<span class="fc" id="L32">        return ResponseEntity.ok(sessionService.getSession(sessionId));</span>
     }
 
     @GetMapping
     public ResponseEntity&lt;List&lt;SessionResponse&gt;&gt; listSessions(@RequestParam UUID userId) {
-<span class="nc" id="L37">        return ResponseEntity.ok(sessionService.listSessions(userId));</span>
+<span class="fc" id="L37">        return ResponseEntity.ok(sessionService.listSessions(userId));</span>
     }
 
     @PostMapping(&quot;/{sessionId}/start&quot;)
     public ResponseEntity&lt;SessionResponse&gt; startSession(
             @PathVariable UUID sessionId,
             @Valid @RequestBody StartSessionRequest request) {
-<span class="nc" id="L44">        return ResponseEntity.ok(sessionService.startSession(sessionId, request));</span>
+<span class="fc" id="L44">        return ResponseEntity.ok(sessionService.startSession(sessionId, request));</span>
     }
 
     @PostMapping(&quot;/{sessionId}/chat&quot;)
@@ -55,7 +55,7 @@ public class SessionController {
     public ResponseEntity&lt;SessionResponse&gt; endSession(
             @PathVariable UUID sessionId,
             @RequestParam(defaultValue = &quot;completed&quot;) String reason) {
-<span class="nc" id="L58">        return ResponseEntity.ok(sessionService.endSession(sessionId, reason));</span>
+<span class="fc" id="L58">        return ResponseEntity.ok(sessionService.endSession(sessionId, reason));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

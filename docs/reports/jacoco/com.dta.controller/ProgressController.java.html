@@ -16,13 +16,13 @@ public class ProgressController {
 
     private final ProgressService progressService;
 
-<span class="nc" id="L19">    public ProgressController(ProgressService progressService) {</span>
-<span class="nc" id="L20">        this.progressService = progressService;</span>
-<span class="nc" id="L21">    }</span>
+<span class="fc" id="L19">    public ProgressController(ProgressService progressService) {</span>
+<span class="fc" id="L20">        this.progressService = progressService;</span>
+<span class="fc" id="L21">    }</span>
 
     @GetMapping(&quot;/weekly&quot;)
     public ResponseEntity&lt;ProgressResponse&gt; weekly(@RequestParam UUID userId) {
-<span class="nc" id="L25">        return ResponseEntity.ok(progressService.getWeeklyProgress(userId));</span>
+<span class="fc" id="L25">        return ResponseEntity.ok(progressService.getWeeklyProgress(userId));</span>
     }
 
     @GetMapping(&quot;/monthly&quot;)
@@ -32,12 +32,12 @@ public class ProgressController {
 
     @GetMapping(&quot;/burnout&quot;)
     public ResponseEntity&lt;ProgressResponse&gt; burnout(@RequestParam UUID userId) {
-<span class="nc" id="L35">        return ResponseEntity.ok(progressService.getBurnoutProgress(userId));</span>
+<span class="fc" id="L35">        return ResponseEntity.ok(progressService.getBurnoutProgress(userId));</span>
     }
 
     @GetMapping(&quot;/achievements&quot;)
     public ResponseEntity&lt;AchievementsResponse&gt; achievements(@RequestParam UUID userId) {
-<span class="nc" id="L40">        return ResponseEntity.ok(progressService.getAchievements(userId));</span>
+<span class="fc" id="L40">        return ResponseEntity.ok(progressService.getAchievements(userId));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

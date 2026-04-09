@@ -21,30 +21,30 @@ public class ProgressCommand implements Command {
 
     @Override
     public void execute() {
-<span class="nc bnc" id="L24" title="All 2 branches missed.">        if (!state.isAuthenticated()) {</span>
-<span class="nc" id="L25">            System.out.println(&quot;Please login first.&quot;);</span>
-<span class="nc" id="L26">            return;</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (!state.isAuthenticated()) {</span>
+<span class="fc" id="L25">            System.out.println(&quot;Please login first.&quot;);</span>
+<span class="fc" id="L26">            return;</span>
         }
 
         while (true) {
-<span class="nc" id="L30">            CliPrompts.printHeader(&quot;Progress Dashboard&quot;);</span>
-<span class="nc" id="L31">            System.out.println(&quot;1. Weekly Summary&quot;);</span>
-<span class="nc" id="L32">            System.out.println(&quot;2. Monthly Trends&quot;);</span>
-<span class="nc" id="L33">            System.out.println(&quot;3. Achievement Snapshot&quot;);</span>
-<span class="nc" id="L34">            System.out.println(&quot;0. Back&quot;);</span>
+<span class="fc" id="L30">            CliPrompts.printHeader(&quot;Progress Dashboard&quot;);</span>
+<span class="fc" id="L31">            System.out.println(&quot;1. Weekly Summary&quot;);</span>
+<span class="fc" id="L32">            System.out.println(&quot;2. Monthly Trends&quot;);</span>
+<span class="fc" id="L33">            System.out.println(&quot;3. Achievement Snapshot&quot;);</span>
+<span class="fc" id="L34">            System.out.println(&quot;0. Back&quot;);</span>
 
-<span class="nc" id="L36">            String choice = CliPrompts.prompt(scanner, &quot;Select an option: &quot;);</span>
-<span class="nc bnc" id="L37" title="All 4 branches missed.">            if (choice == null || &quot;0&quot;.equals(choice)) {</span>
-<span class="nc" id="L38">                return;</span>
+<span class="fc" id="L36">            String choice = CliPrompts.prompt(scanner, &quot;Select an option: &quot;);</span>
+<span class="pc bpc" id="L37" title="1 of 4 branches missed.">            if (choice == null || &quot;0&quot;.equals(choice)) {</span>
+<span class="fc" id="L38">                return;</span>
             }
 
-<span class="nc bnc" id="L41" title="All 4 branches missed.">            switch (choice) {</span>
-<span class="nc" id="L42">                case &quot;1&quot; -&gt; print(progressService.getWeeklyProgress(state.getCurrentUserId()));</span>
-<span class="nc" id="L43">                case &quot;2&quot; -&gt; print(progressService.getMonthlyProgress(state.getCurrentUserId()));</span>
-<span class="nc" id="L44">                case &quot;3&quot; -&gt; print(progressService.getBurnoutProgress(state.getCurrentUserId()));</span>
-<span class="nc" id="L45">                default -&gt; System.out.println(&quot;Invalid option. Please try again.&quot;);</span>
+<span class="fc bfc" id="L41" title="All 4 branches covered.">            switch (choice) {</span>
+<span class="fc" id="L42">                case &quot;1&quot; -&gt; print(progressService.getWeeklyProgress(state.getCurrentUserId()));</span>
+<span class="fc" id="L43">                case &quot;2&quot; -&gt; print(progressService.getMonthlyProgress(state.getCurrentUserId()));</span>
+<span class="fc" id="L44">                case &quot;3&quot; -&gt; print(progressService.getBurnoutProgress(state.getCurrentUserId()));</span>
+<span class="fc" id="L45">                default -&gt; System.out.println(&quot;Invalid option. Please try again.&quot;);</span>
             }
-<span class="nc" id="L47">        }</span>
+<span class="fc" id="L47">        }</span>
     }
 
     @Override
@@ -53,12 +53,12 @@ public class ProgressCommand implements Command {
     }
 
     private void print(ProgressResponse response) {
-<span class="nc" id="L56">        System.out.println(&quot;Timeframe: &quot; + response.getTimeframe());</span>
-<span class="nc" id="L57">        System.out.println(&quot;Score: &quot; + response.getScore());</span>
-<span class="nc" id="L58">        System.out.println(&quot;Completed sessions: &quot; + response.getCompletedSessions());</span>
-<span class="nc" id="L59">        System.out.println(&quot;Diary entries: &quot; + response.getDiaryEntries());</span>
-<span class="nc" id="L60">        System.out.println(&quot;Burnout trend: &quot; + response.getBurnoutTrend());</span>
-<span class="nc" id="L61">        System.out.println(&quot;Highlights: &quot; + response.getHighlights());</span>
-<span class="nc" id="L62">    }</span>
+<span class="fc" id="L56">        System.out.println(&quot;Timeframe: &quot; + response.getTimeframe());</span>
+<span class="fc" id="L57">        System.out.println(&quot;Score: &quot; + response.getScore());</span>
+<span class="fc" id="L58">        System.out.println(&quot;Completed sessions: &quot; + response.getCompletedSessions());</span>
+<span class="fc" id="L59">        System.out.println(&quot;Diary entries: &quot; + response.getDiaryEntries());</span>
+<span class="fc" id="L60">        System.out.println(&quot;Burnout trend: &quot; + response.getBurnoutTrend());</span>
+<span class="fc" id="L61">        System.out.println(&quot;Highlights: &quot; + response.getHighlights());</span>
+<span class="fc" id="L62">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -10,46 +10,46 @@ import java.util.UUID;
     private UUID activeSessionId;
 
     public UUID getCurrentUserId() {
-<span class="nc" id="L13">        return currentUserId;</span>
+<span class="fc" id="L13">        return currentUserId;</span>
     }
 
     public void setCurrentUserId(UUID currentUserId) {
-<span class="nc" id="L17">        this.currentUserId = currentUserId;</span>
-<span class="nc" id="L18">    }</span>
+<span class="fc" id="L17">        this.currentUserId = currentUserId;</span>
+<span class="fc" id="L18">    }</span>
 
     public String getCurrentUserEmail() {
-<span class="nc" id="L21">        return currentUserEmail;</span>
+<span class="fc" id="L21">        return currentUserEmail;</span>
     }
 
     public void setCurrentUserEmail(String currentUserEmail) {
-<span class="nc" id="L25">        this.currentUserEmail = currentUserEmail;</span>
-<span class="nc" id="L26">    }</span>
+<span class="fc" id="L25">        this.currentUserEmail = currentUserEmail;</span>
+<span class="fc" id="L26">    }</span>
 
     public String getCurrentRefreshToken() {
-<span class="nc" id="L29">        return currentRefreshToken;</span>
+<span class="fc" id="L29">        return currentRefreshToken;</span>
     }
 
     public void setCurrentRefreshToken(String currentRefreshToken) {
-<span class="nc" id="L33">        this.currentRefreshToken = currentRefreshToken;</span>
-<span class="nc" id="L34">    }</span>
+<span class="fc" id="L33">        this.currentRefreshToken = currentRefreshToken;</span>
+<span class="fc" id="L34">    }</span>
 
     public UUID getActiveSessionId() {
-<span class="nc" id="L37">        return activeSessionId;</span>
+<span class="fc" id="L37">        return activeSessionId;</span>
     }
 
     public void setActiveSessionId(UUID activeSessionId) {
-<span class="nc" id="L41">        this.activeSessionId = activeSessionId;</span>
-<span class="nc" id="L42">    }</span>
+<span class="fc" id="L41">        this.activeSessionId = activeSessionId;</span>
+<span class="fc" id="L42">    }</span>
 
     public boolean isAuthenticated() {
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        return currentUserId != null;</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        return currentUserId != null;</span>
     }
 
     public void clearAuthentication() {
-<span class="nc" id="L49">        currentUserId = null;</span>
-<span class="nc" id="L50">        currentUserEmail = null;</span>
-<span class="nc" id="L51">        currentRefreshToken = null;</span>
-<span class="nc" id="L52">        activeSessionId = null;</span>
-<span class="nc" id="L53">    }</span>
+<span class="fc" id="L49">        currentUserId = null;</span>
+<span class="fc" id="L50">        currentUserEmail = null;</span>
+<span class="fc" id="L51">        currentRefreshToken = null;</span>
+<span class="fc" id="L52">        activeSessionId = null;</span>
+<span class="fc" id="L53">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

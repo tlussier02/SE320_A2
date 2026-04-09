@@ -26,35 +26,35 @@ public class SessionWorkflowCommand implements Command {
 
     @Override
     public void execute() {
-<span class="nc bnc" id="L29" title="All 2 branches missed.">        if (!requireAuthentication()) {</span>
-<span class="nc" id="L30">            return;</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        if (!requireAuthentication()) {</span>
+<span class="fc" id="L30">            return;</span>
         }
 
         while (true) {
-<span class="nc" id="L34">            CliPrompts.printHeader(&quot;CBT Sessions&quot;);</span>
-<span class="nc" id="L35">            System.out.println(&quot;1. View Session History&quot;);</span>
-<span class="nc" id="L36">            System.out.println(&quot;2. Start New Session&quot;);</span>
-<span class="nc" id="L37">            System.out.println(&quot;3. Continue Session Chat&quot;);</span>
-<span class="nc" id="L38">            System.out.println(&quot;4. End Session&quot;);</span>
-<span class="nc" id="L39">            System.out.println(&quot;0. Back&quot;);</span>
+<span class="fc" id="L34">            CliPrompts.printHeader(&quot;CBT Sessions&quot;);</span>
+<span class="fc" id="L35">            System.out.println(&quot;1. View Session History&quot;);</span>
+<span class="fc" id="L36">            System.out.println(&quot;2. Start New Session&quot;);</span>
+<span class="fc" id="L37">            System.out.println(&quot;3. Continue Session Chat&quot;);</span>
+<span class="fc" id="L38">            System.out.println(&quot;4. End Session&quot;);</span>
+<span class="fc" id="L39">            System.out.println(&quot;0. Back&quot;);</span>
 
-<span class="nc" id="L41">            String choice = CliPrompts.prompt(scanner, &quot;Select an option: &quot;);</span>
-<span class="nc bnc" id="L42" title="All 4 branches missed.">            if (choice == null || &quot;0&quot;.equals(choice)) {</span>
-<span class="nc" id="L43">                return;</span>
+<span class="fc" id="L41">            String choice = CliPrompts.prompt(scanner, &quot;Select an option: &quot;);</span>
+<span class="pc bpc" id="L42" title="1 of 4 branches missed.">            if (choice == null || &quot;0&quot;.equals(choice)) {</span>
+<span class="fc" id="L43">                return;</span>
             }
 
             try {
-<span class="nc bnc" id="L47" title="All 5 branches missed.">                switch (choice) {</span>
-<span class="nc" id="L48">                    case &quot;1&quot; -&gt; viewHistory();</span>
-<span class="nc" id="L49">                    case &quot;2&quot; -&gt; startSession();</span>
-<span class="nc" id="L50">                    case &quot;3&quot; -&gt; continueChat();</span>
-<span class="nc" id="L51">                    case &quot;4&quot; -&gt; endSession();</span>
-<span class="nc" id="L52">                    default -&gt; System.out.println(&quot;Invalid option. Please try again.&quot;);</span>
+<span class="fc bfc" id="L47" title="All 5 branches covered.">                switch (choice) {</span>
+<span class="fc" id="L48">                    case &quot;1&quot; -&gt; viewHistory();</span>
+<span class="fc" id="L49">                    case &quot;2&quot; -&gt; startSession();</span>
+<span class="fc" id="L50">                    case &quot;3&quot; -&gt; continueChat();</span>
+<span class="fc" id="L51">                    case &quot;4&quot; -&gt; endSession();</span>
+<span class="fc" id="L52">                    default -&gt; System.out.println(&quot;Invalid option. Please try again.&quot;);</span>
                 }
-<span class="nc" id="L54">            } catch (RuntimeException ex) {</span>
-<span class="nc" id="L55">                System.out.println(&quot;Session error: &quot; + ex.getMessage());</span>
-<span class="nc" id="L56">            }</span>
-<span class="nc" id="L57">        }</span>
+<span class="fc" id="L54">            } catch (RuntimeException ex) {</span>
+<span class="fc" id="L55">                System.out.println(&quot;Session error: &quot; + ex.getMessage());</span>
+<span class="fc" id="L56">            }</span>
+<span class="fc" id="L57">        }</span>
     }
 
     @Override
@@ -63,82 +63,82 @@ public class SessionWorkflowCommand implements Command {
     }
 
     private boolean requireAuthentication() {
-<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (!state.isAuthenticated()) {</span>
-<span class="nc" id="L67">            System.out.println(&quot;Please login first.&quot;);</span>
-<span class="nc" id="L68">            return false;</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (!state.isAuthenticated()) {</span>
+<span class="fc" id="L67">            System.out.println(&quot;Please login first.&quot;);</span>
+<span class="fc" id="L68">            return false;</span>
         }
-<span class="nc" id="L70">        return true;</span>
+<span class="fc" id="L70">        return true;</span>
     }
 
     private void viewHistory() {
-<span class="nc" id="L74">        List&lt;SessionResponse&gt; sessions = sessionService.listSessions(state.getCurrentUserId());</span>
-<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (sessions.isEmpty()) {</span>
+<span class="fc" id="L74">        List&lt;SessionResponse&gt; sessions = sessionService.listSessions(state.getCurrentUserId());</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (sessions.isEmpty()) {</span>
 <span class="nc" id="L76">            System.out.println(&quot;No sessions found.&quot;);</span>
 <span class="nc" id="L77">            return;</span>
         }
 
-<span class="nc" id="L80">        System.out.println(&quot;Session History&quot;);</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (SessionResponse session : sessions) {</span>
-<span class="nc" id="L82">            System.out.println(&quot;- &quot; + session.getSessionId() + &quot; | &quot; + session.getTitle() + &quot; | &quot; + session.getStatus());</span>
-<span class="nc" id="L83">        }</span>
-<span class="nc" id="L84">    }</span>
+<span class="fc" id="L80">        System.out.println(&quot;Session History&quot;);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for (SessionResponse session : sessions) {</span>
+<span class="fc" id="L82">            System.out.println(&quot;- &quot; + session.getSessionId() + &quot; | &quot; + session.getTitle() + &quot; | &quot; + session.getStatus());</span>
+<span class="fc" id="L83">        }</span>
+<span class="fc" id="L84">    }</span>
 
     private void startSession() {
-<span class="nc" id="L87">        StartSessionRequest request = new StartSessionRequest();</span>
-<span class="nc" id="L88">        request.setUserId(state.getCurrentUserId());</span>
-<span class="nc" id="L89">        request.setTitle(CliPrompts.prompt(scanner, &quot;Session title: &quot;));</span>
-<span class="nc" id="L90">        request.setMood(CliPrompts.prompt(scanner, &quot;Current mood: &quot;));</span>
-<span class="nc" id="L91">        request.setMode(CliPrompts.prompt(scanner, &quot;Session mode: &quot;));</span>
+<span class="fc" id="L87">        StartSessionRequest request = new StartSessionRequest();</span>
+<span class="fc" id="L88">        request.setUserId(state.getCurrentUserId());</span>
+<span class="fc" id="L89">        request.setTitle(CliPrompts.prompt(scanner, &quot;Session title: &quot;));</span>
+<span class="fc" id="L90">        request.setMood(CliPrompts.prompt(scanner, &quot;Current mood: &quot;));</span>
+<span class="fc" id="L91">        request.setMode(CliPrompts.prompt(scanner, &quot;Session mode: &quot;));</span>
 
-<span class="nc" id="L93">        SessionResponse response = sessionService.startSession(UUID.randomUUID(), request);</span>
-<span class="nc" id="L94">        state.setActiveSessionId(response.getSessionId());</span>
-<span class="nc" id="L95">        System.out.println(&quot;Started session &quot; + response.getSessionId() + &quot; (&quot; + response.getTitle() + &quot;)&quot;);</span>
-<span class="nc" id="L96">    }</span>
+<span class="fc" id="L93">        SessionResponse response = sessionService.startSession(UUID.randomUUID(), request);</span>
+<span class="fc" id="L94">        state.setActiveSessionId(response.getSessionId());</span>
+<span class="fc" id="L95">        System.out.println(&quot;Started session &quot; + response.getSessionId() + &quot; (&quot; + response.getTitle() + &quot;)&quot;);</span>
+<span class="fc" id="L96">    }</span>
 
     private void continueChat() {
-<span class="nc" id="L99">        UUID sessionId = resolveSessionId();</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">        if (sessionId == null) {</span>
-<span class="nc" id="L101">            System.out.println(&quot;A session id is required.&quot;);</span>
-<span class="nc" id="L102">            return;</span>
+<span class="fc" id="L99">        UUID sessionId = resolveSessionId();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (sessionId == null) {</span>
+<span class="fc" id="L101">            System.out.println(&quot;A session id is required.&quot;);</span>
+<span class="fc" id="L102">            return;</span>
         }
 
-<span class="nc" id="L105">        ChatRequest request = new ChatRequest();</span>
-<span class="nc" id="L106">        request.setMessage(CliPrompts.prompt(scanner, &quot;Your message: &quot;));</span>
-<span class="nc" id="L107">        ChatResponse response = sessionService.chat(sessionId, request);</span>
-<span class="nc" id="L108">        state.setActiveSessionId(sessionId);</span>
-<span class="nc" id="L109">        System.out.println(&quot;Assistant: &quot; + response.getAssistantMessage());</span>
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (response.isCrisisFlagged()) {</span>
-<span class="nc" id="L111">            System.out.println(&quot;Crisis flag detected. Review crisis support immediately.&quot;);</span>
+<span class="fc" id="L105">        ChatRequest request = new ChatRequest();</span>
+<span class="fc" id="L106">        request.setMessage(CliPrompts.prompt(scanner, &quot;Your message: &quot;));</span>
+<span class="fc" id="L107">        ChatResponse response = sessionService.chat(sessionId, request);</span>
+<span class="fc" id="L108">        state.setActiveSessionId(sessionId);</span>
+<span class="fc" id="L109">        System.out.println(&quot;Assistant: &quot; + response.getAssistantMessage());</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (response.isCrisisFlagged()) {</span>
+<span class="fc" id="L111">            System.out.println(&quot;Crisis flag detected. Review crisis support immediately.&quot;);</span>
         }
-<span class="nc" id="L113">    }</span>
+<span class="fc" id="L113">    }</span>
 
     private void endSession() {
-<span class="nc" id="L116">        UUID sessionId = resolveSessionId();</span>
-<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (sessionId == null) {</span>
+<span class="fc" id="L116">        UUID sessionId = resolveSessionId();</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">        if (sessionId == null) {</span>
 <span class="nc" id="L118">            System.out.println(&quot;A session id is required.&quot;);</span>
 <span class="nc" id="L119">            return;</span>
         }
 
-<span class="nc" id="L122">        String reason = CliPrompts.prompt(scanner, &quot;End reason: &quot;);</span>
-<span class="nc" id="L123">        SessionResponse response = sessionService.endSession(sessionId, reason);</span>
-<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (sessionId.equals(state.getActiveSessionId())) {</span>
-<span class="nc" id="L125">            state.setActiveSessionId(null);</span>
+<span class="fc" id="L122">        String reason = CliPrompts.prompt(scanner, &quot;End reason: &quot;);</span>
+<span class="fc" id="L123">        SessionResponse response = sessionService.endSession(sessionId, reason);</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (sessionId.equals(state.getActiveSessionId())) {</span>
+<span class="fc" id="L125">            state.setActiveSessionId(null);</span>
         }
-<span class="nc" id="L127">        System.out.println(&quot;Ended session &quot; + response.getSessionId() + &quot; with status &quot; + response.getStatus());</span>
-<span class="nc bnc" id="L128" title="All 4 branches missed.">        if (response.getSummary() != null &amp;&amp; !response.getSummary().isBlank()) {</span>
-<span class="nc" id="L129">            System.out.println(&quot;Summary: &quot; + response.getSummary());</span>
+<span class="fc" id="L127">        System.out.println(&quot;Ended session &quot; + response.getSessionId() + &quot; with status &quot; + response.getStatus());</span>
+<span class="pc bpc" id="L128" title="2 of 4 branches missed.">        if (response.getSummary() != null &amp;&amp; !response.getSummary().isBlank()) {</span>
+<span class="fc" id="L129">            System.out.println(&quot;Summary: &quot; + response.getSummary());</span>
         }
-<span class="nc" id="L131">    }</span>
+<span class="fc" id="L131">    }</span>
 
     private UUID resolveSessionId() {
-<span class="nc" id="L134">        String input = CliPrompts.prompt(</span>
+<span class="fc" id="L134">        String input = CliPrompts.prompt(</span>
                 scanner,
                 &quot;Session id (leave blank to use active session): &quot;);
-<span class="nc bnc" id="L137" title="All 2 branches missed.">        if (input == null) {</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (input == null) {</span>
 <span class="nc" id="L138">            return null;</span>
         }
-<span class="nc bnc" id="L140" title="All 2 branches missed.">        if (input.isBlank()) {</span>
-<span class="nc" id="L141">            return state.getActiveSessionId();</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        if (input.isBlank()) {</span>
+<span class="fc" id="L141">            return state.getActiveSessionId();</span>
         }
 <span class="nc" id="L143">        return UUID.fromString(input);</span>
     }

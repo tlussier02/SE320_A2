@@ -23,35 +23,35 @@ public class CrisisController {
 
     private final CrisisService crisisService;
 
-<span class="nc" id="L26">    public CrisisController(CrisisService crisisService) {</span>
-<span class="nc" id="L27">        this.crisisService = crisisService;</span>
-<span class="nc" id="L28">    }</span>
+<span class="fc" id="L26">    public CrisisController(CrisisService crisisService) {</span>
+<span class="fc" id="L27">        this.crisisService = crisisService;</span>
+<span class="fc" id="L28">    }</span>
 
     @GetMapping
     public ResponseEntity&lt;CrisisResponse&gt; crisisState() {
-<span class="nc" id="L32">        return ResponseEntity.ok(crisisService.getCrisisOverview());</span>
+<span class="fc" id="L32">        return ResponseEntity.ok(crisisService.getCrisisOverview());</span>
     }
 
     @PostMapping(&quot;/detect&quot;)
     public ResponseEntity&lt;CrisisResponse&gt; detect(
             @Valid @RequestBody DistortionSuggestionRequest request) {
-<span class="nc" id="L38">        return ResponseEntity.ok(crisisService.detectCrisis(request));</span>
+<span class="fc" id="L38">        return ResponseEntity.ok(crisisService.detectCrisis(request));</span>
     }
 
     @GetMapping(&quot;/coping-strategies&quot;)
     public ResponseEntity&lt;CopingStrategiesResponse&gt; getCopingStrategies() {
-<span class="nc" id="L43">        return ResponseEntity.ok(crisisService.getCopingStrategies());</span>
+<span class="fc" id="L43">        return ResponseEntity.ok(crisisService.getCopingStrategies());</span>
     }
 
     @GetMapping(&quot;/safety-plan&quot;)
     public ResponseEntity&lt;SafetyPlanResponse&gt; getSafetyPlan(@RequestParam UUID userId) {
-<span class="nc" id="L48">        return ResponseEntity.ok(crisisService.getSafetyPlan(userId));</span>
+<span class="fc" id="L48">        return ResponseEntity.ok(crisisService.getSafetyPlan(userId));</span>
     }
 
     @PutMapping(&quot;/safety-plan&quot;)
     public ResponseEntity&lt;SafetyPlanResponse&gt; updateSafetyPlan(
             @Valid @RequestBody UpdateSafetyPlanRequest request) {
-<span class="nc" id="L54">        return ResponseEntity.ok(crisisService.updateSafetyPlan(request));</span>
+<span class="fc" id="L54">        return ResponseEntity.ok(crisisService.updateSafetyPlan(request));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

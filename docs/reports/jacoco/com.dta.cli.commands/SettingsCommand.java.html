@@ -13,16 +13,16 @@ public class SettingsCommand implements Command {
 
     @Override
     public void execute() {
-<span class="nc" id="L16">        System.out.println(&quot;Application URLs&quot;);</span>
-<span class="nc" id="L17">        System.out.println(&quot;- Swagger UI: http://localhost:8080/swagger-ui/index.html&quot;);</span>
-<span class="nc" id="L18">        System.out.println(&quot;- H2 Console: http://localhost:8080/h2-console/login.jsp&quot;);</span>
-<span class="nc" id="L19">        System.out.println(&quot;- API Docs: http://localhost:8080/v3/api-docs&quot;);</span>
-<span class="nc bnc" id="L20" title="All 2 branches missed.">        if (state.isAuthenticated()) {</span>
-<span class="nc" id="L21">            System.out.println(&quot;Current user: &quot; + state.getCurrentUserEmail());</span>
+<span class="fc" id="L16">        System.out.println(&quot;Application URLs&quot;);</span>
+<span class="fc" id="L17">        System.out.println(&quot;- Swagger UI: http://localhost:8080/swagger-ui/index.html&quot;);</span>
+<span class="fc" id="L18">        System.out.println(&quot;- H2 Console: http://localhost:8080/h2-console/login.jsp&quot;);</span>
+<span class="fc" id="L19">        System.out.println(&quot;- API Docs: http://localhost:8080/v3/api-docs&quot;);</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">        if (state.isAuthenticated()) {</span>
+<span class="fc" id="L21">            System.out.println(&quot;Current user: &quot; + state.getCurrentUserEmail());</span>
         } else {
-<span class="nc" id="L23">            System.out.println(&quot;Current user: not logged in&quot;);</span>
+<span class="fc" id="L23">            System.out.println(&quot;Current user: not logged in&quot;);</span>
         }
-<span class="nc" id="L25">    }</span>
+<span class="fc" id="L25">    }</span>
 
     @Override
     public String getDescription() {
