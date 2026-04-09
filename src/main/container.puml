@@ -1,0 +1,22 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Patient", "A user of the DTA system.")
+
+System_Boundary(c1, "Digital Therapy Assistant") {
+    Container(cli, "CLI Application", "Java", "The command-line interface.")
+    Container(api, "REST API (Spring Boot)", "Java/Spring", "Handles business logic.")
+    ContainerDb(db, "H2 Database", "Relational Database", "Stores user profiles and sessions.")
+    Container(vector, "SimpleVector Store", "In-Memory", "Stores thought embeddings.")
+    Container(kb, "Knowledge Base", "Markdown/JSON", "CBT reframing rules.")
+}
+
+System_Ext(openai, "OpenAI API", "AI Service")
+
+Rel(user, cli, "Interacts with")
+Rel(cli, api, "Makes API calls to")
+Rel(api, db, "Reads/Writes to")
+Rel(api, vector, "Queries embeddings")
+Rel(api, kb, "Fetches CBT rules")
+Rel(api, openai, "Integrates with")
+@enduml

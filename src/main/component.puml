@@ -1,0 +1,25 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(api, "REST API Application") {
+    Component(auth, "Auth Controller", "Spring RestController", "Handles user sign-in.")
+    Component(diary, "Diary Controller", "Spring RestController", "Manages diary entries.")
+    Component(sessions, "Session Controller", "Spring RestController", "Manages therapy sessions.")
+    
+    Component(security, "Security Filter", "JWT/Spring Security", "Authenticates requests.")
+    
+    Component(aiService, "AI Service", "Spring Service", "Orchestrates RAG logic.")
+    Component(crisis, "Crisis Service", "Spring Service", "Detects high-risk language.")
+    
+    Component(rag, "AI Integration Module", "RAG Pipeline", "Links Knowledge Base to input.")
+    
+    Component(repo, "Repository Layer", "Spring Data JPA", "Interfaces with H2.")
+}
+
+Rel(security, auth, "Protects")
+Rel(auth, repo, "Uses")
+Rel(diary, aiService, "Uses")
+Rel(aiService, rag, "Uses")
+Rel(rag, repo, "Uses")
+Rel(crisis, repo, "Uses")
+@enduml

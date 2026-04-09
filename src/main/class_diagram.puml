@@ -1,0 +1,41 @@
+@startuml
+package "com.dta.entity" {
+    class User {
+        +UUID id
+        +String fullName
+        +String email
+    }
+    class UserSession {
+        +UUID id
+        +String status
+        +Instant startedAt
+    }
+    class DiaryEntry {
+        +UUID id
+        +String automaticThought
+        +String reflection
+    }
+}
+
+package "com.dta.service" {
+    interface AuthService
+    interface SessionService
+    interface DiaryService
+}
+
+package "com.dta.repository" {
+    interface UserRepository
+    interface UserSessionRepository
+    interface DiaryEntryRepository
+}
+
+User "1" *-- "0..*" UserSession : owns
+User "1" *-- "0..*" DiaryEntry : writes
+SessionServiceImpl ..|> SessionService
+AuthServiceImpl ..|> AuthService
+DiaryServiceImpl ..|> DiaryService
+
+SessionServiceImpl --> UserSessionRepository
+AuthServiceImpl --> UserRepository
+DiaryServiceImpl --> DiaryEntryRepository
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant "CLI / DiaryController" as DC
+participant "AiServiceImpl" as AI
+participant "KnowledgeBaseLoader" as KB
+participant "CrisisDetector" as CD
+
+User -> DC: Submits Thought Diary entry
+DC -> CD: detectCrisis(thought)
+CD --> DC: CrisisAssessmentResult
+DC -> AI: analyzeThought(thought)
+AI -> KB: findMatchingEntries(thought)
+KB --> AI: List<CbtKnowledgeEntry>
+AI --> DC: ThoughtAnalysisResponse
+DC -> User: Shows analysis & reframing prompts
+@enduml
