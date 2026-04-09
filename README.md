@@ -38,6 +38,7 @@ Submission copies:
 
 - exported OpenAPI JSON: `docs/api/openapi.json`
 - preserved JaCoCo report: `docs/reports/jacoco/index.html`
+- design document PDF: `Design Document.pdf`
 
 ## Seeded Accounts
 
@@ -88,4 +89,4 @@ The copy under `docs/` is kept outside `target/` because `mvn clean` removes gen
 
 ## Current Submission Scope
 
-This repository contains the application code, CLI, H2 configuration, Swagger support, schema/data initialization, and coverage generation. The design document PDF can be assembled separately if your group is building that artifact in a different workflow.
+This repository contains the application code, CLI, H2 configuration, Swagger support, schema/data initialization, preserved coverage artifacts, C4 diagram source/exports, and the design document PDF.
