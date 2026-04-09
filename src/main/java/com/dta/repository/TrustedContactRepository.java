@@ -1,10 +1,15 @@
 package com.dta.repository;
 
 import com.dta.entity.TrustedContact;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TrustedContactRepository {
-    // TODO [Timmy]: Load primary trusted contact for active user, with fallback by relation type.
-    TrustedContact findPrimary();
-    // TODO [Timmy]: Persist trusted-contact relationships with encryption at rest where needed.
-    TrustedContact save(TrustedContact contact);
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public interface TrustedContactRepository extends JpaRepository<TrustedContact, Long> {
+    
+    // Finds all trusted contacts associated with a specific user
+    List<TrustedContact> findByUserId(UUID userId);
 }

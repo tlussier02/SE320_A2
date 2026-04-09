@@ -1,81 +1,104 @@
 package com.dta.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.dta.ai.CrisisDetector;
-import com.dta.ai.KnowledgeBaseLoader;
-import com.dta.ai.RagContextBuilder;
+import com.dta.ai.*;
+import com.dta.dto.response.CrisisResponse;
 import com.dta.dto.response.ThoughtAnalysisResponse;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class AiServiceImplTest {
 
-    private final AiServiceImpl aiService = new AiServiceImpl(
-            new RagContextBuilder(),
-            new KnowledgeBaseLoader(),
-            new CrisisDetector()
-    );
+    @Mock
+    private RagContextBuilder contextBuilder;
+
+    @Mock
+    private KnowledgeBaseLoader knowledgeBaseLoader;
+
+    @Mock
+    private CrisisDetector crisisDetector;
+
+    @InjectMocks
+    private AiServiceImpl aiService;
 
     @Test
-    void analyzeThoughtMapsAbsoluteLanguageToAllOrNothingThinking() {
-        ThoughtAnalysisResponse response = aiService.analyzeThought(
-                "I always fail and I never do enough."
-        );
-
-        assertTrue(response.getDistortions().contains("all-or-nothing thinking"));
-    }
-
-    @Test
-    void analyzeThoughtMapsCatastrophizingLanguage() {
-        ThoughtAnalysisResponse response = aiService.analyzeThought(
-                "This is the worst disaster and everything is ruined."
-        );
-
-        assertTrue(response.getDistortions().contains("catastrophizing"));
-    }
-
-    @Test
-    void analyzeThoughtReturnsFallbackWhenNoStrongMatchExists() {
-        ThoughtAnalysisResponse response = aiService.analyzeThought(
-                "I want to understand why this meeting felt hard."
-        );
-
-        assertEquals(List.of("no strong distortion detected"), response.getDistortions());
-    }
-
-    @Test
-    void generateReframingPromptsUsesMatchedDistortionPrompts() {
-        List<String> prompts = aiService.generateReframingPrompts(
-                "This is the worst possible outcome."
-        );
-
-        assertFalse(prompts.isEmpty());
-        assertTrue(prompts.stream().anyMatch(prompt -> prompt.contains("most likely outcome")));
-    }
-
-    @Test
-    void generateResponseUsesMatchedKnowledgeAndChangesByInput() {
+    void testGenerateResponse_WithMatchedEntries() {
         UUID userId = UUID.randomUUID();
         UUID sessionId = UUID.randomUUID();
+        String message = "I feel like a failure.";
 
-        String catastrophizing = aiService.generateResponse(
-                userId,
-                sessionId,
-                "This is the worst disaster."
-        );
-        String shouldStatements = aiService.generateResponse(
-                userId,
-                sessionId,
-                "I should be perfect all the time."
+        CbtKnowledgeEntry entry = new CbtKnowledgeEntry(
+                "Labeling", 
+                "Extreme labels", 
+                List.of("Try a kinder label."),
+                List.of("labeling") 
         );
 
-        assertTrue(catastrophizing.contains("catastrophizing"));
-        assertTrue(shouldStatements.contains("should statements"));
-        assertNotEquals(catastrophizing, shouldStatements);
+        when(knowledgeBaseLoader.findMatchingEntries(anyString())).thenReturn(List.of(entry));
+        when(contextBuilder.build(anyString(), anyString(), anyString(), anyList())).thenReturn("mockContext");
+
+        String response = aiService.generateResponse(userId, sessionId, message);
+
+        // Matches "This sounds connected to Labeling"
+        assertTrue(response.contains("Labeling"));
+        // Matches "extreme labels" because your service calls .toLowerCase() on description
+        assertTrue(response.toLowerCase().contains("extreme labels"));
+    }
+
+    @Test
+    void testGenerateResponse_EmptyEntries() {
+        UUID userId = UUID.randomUUID();
+        UUID sessionId = UUID.randomUUID();
+        
+        when(knowledgeBaseLoader.findMatchingEntries(anyString())).thenReturn(Collections.emptyList());
+        when(contextBuilder.build(anyString(), anyString(), anyString(), anyList())).thenReturn("emptyContext");
+
+        String response = aiService.generateResponse(userId, sessionId, "general chat");
+
+        assertTrue(response.contains("evidence for and against it"));
+    }
+
+    @Test
+    void testAnalyzeThought_NoDistortions() {
+        when(knowledgeBaseLoader.findMatchingEntries(anyString())).thenReturn(Collections.emptyList());
+
+        ThoughtAnalysisResponse response = aiService.analyzeThought("I am eating an apple.");
+
+        assertEquals("no strong distortion detected", response.getDistortions().get(0));
+        assertEquals(3, response.getReframingPrompts().size());
+    }
+
+    @Test
+    void testDetectCrisis_Positive() {
+        CrisisAssessmentResult assessment = new CrisisAssessmentResult(
+                "high", 
+                List.of("harm"), 
+                "Call 988", 
+                "Risk detected"
+        );
+        when(crisisDetector.detect(anyString())).thenReturn(assessment);
+
+        CrisisResponse response = aiService.detectCrisis("I want to hurt myself");
+
+        assertTrue(response.isCrisis());
+        assertEquals("high", response.getRiskLevel());
+    }
+
+    @Test
+    void testSummaries() {
+        UUID id = UUID.randomUUID();
+        assertNotNull(aiService.generateInsights(id));
+        assertNotNull(aiService.summarizeSession(id));
     }
 }

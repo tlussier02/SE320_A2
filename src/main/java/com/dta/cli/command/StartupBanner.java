@@ -1,8 +1,10 @@
 package com.dta.cli.command;
 
 public class StartupBanner {
-    // TODO [Timmy]: Replace with rich CLI banner + optional diagnostics and startup checks.
     public static void print() {
-        System.out.println("Digital Therapy Assistant CLI ready");
+        System.out.println("*************************************************");
+        System.out.println("* DIGITAL THERAPY ASSISTANT (DTA)        *");
+        System.out.println("* Your CBT Support System            *");
+        System.out.println("*************************************************");
     }
 }

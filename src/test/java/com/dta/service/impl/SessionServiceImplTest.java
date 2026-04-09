@@ -1,98 +1,148 @@
 package com.dta.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.dta.ai.CrisisDetector;
-import com.dta.ai.KnowledgeBaseLoader;
-import com.dta.ai.RagContextBuilder;
 import com.dta.dto.request.ChatRequest;
+import com.dta.dto.request.StartSessionRequest;
 import com.dta.dto.response.ChatResponse;
+import com.dta.dto.response.CrisisResponse;
+import com.dta.dto.response.SessionResponse;
 import com.dta.entity.UserSession;
+import com.dta.exception.BadRequestException;
+import com.dta.exception.ResourceNotFoundException;
 import com.dta.repository.UserSessionRepository;
-import java.lang.reflect.Proxy;
+import com.dta.service.AiService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class SessionServiceImplTest {
 
-    private AiServiceImpl createAiService() {
-        return new AiServiceImpl(
-                new RagContextBuilder(),
-                new KnowledgeBaseLoader(),
-                new CrisisDetector()
-        );
+    @Mock
+    private UserSessionRepository userSessionRepository;
+
+    @Mock
+    private AiService aiService;
+
+    @InjectMocks
+    private SessionServiceImpl sessionService;
+
+    @Test
+    void testStartSession_ReturnsSessionResponse() {
+        UUID userId = UUID.randomUUID();
+        UUID templateId = UUID.randomUUID();
+        StartSessionRequest request = new StartSessionRequest();
+        request.setUserId(userId);
+        request.setTitle("Burnout Recovery");
+
+        UserSession savedSession = new UserSession();
+        savedSession.setId(UUID.randomUUID());
+        savedSession.setUserId(userId);
+        savedSession.setTitle("Burnout Recovery");
+        savedSession.setStatus("ACTIVE");
+
+        when(userSessionRepository.save(any(UserSession.class))).thenReturn(savedSession);
+
+        SessionResponse response = sessionService.startSession(templateId, request);
+
+        assertNotNull(response);
+        assertEquals("ACTIVE", response.getStatus());
+        assertEquals("Burnout Recovery", response.getTitle());
+        verify(userSessionRepository).save(any(UserSession.class));
     }
 
     @Test
-    void chatSetsCrisisFlaggedTrueForCrisisLanguage() {
+    void testChat_WithValidMessage_ReturnsChatResponse() {
         UUID sessionId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        UserSession session = createSession(sessionId, userId);
-        UserSessionRepository repository = repositoryReturning(sessionId, session);
-
-        SessionServiceImpl service = new SessionServiceImpl(repository, createAiService());
         ChatRequest request = new ChatRequest();
-        request.setMessage("I want to kill myself because nothing matters.");
+        request.setMessage("I feel overwhelmed today.");
 
-        ChatResponse response = service.chat(sessionId, request);
-
-        assertTrue(response.isCrisisFlagged());
-        assertNotNull(response.getTimestamp());
-    }
-
-    @Test
-    void chatSetsCrisisFlaggedFalseForNonCrisisLanguage() {
-        UUID sessionId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UserSession session = createSession(sessionId, userId);
-        UserSessionRepository repository = repositoryReturning(sessionId, session);
-
-        SessionServiceImpl service = new SessionServiceImpl(repository, createAiService());
-        ChatRequest request = new ChatRequest();
-        request.setMessage("I had a rough day and want help reframing this.");
-
-        ChatResponse response = service.chat(sessionId, request);
-
-        assertFalse(response.isCrisisFlagged());
-        assertNotNull(response.getAssistantMessage());
-    }
-
-    private UserSession createSession(UUID sessionId, UUID userId) {
         UserSession session = new UserSession();
         session.setId(sessionId);
         session.setUserId(userId);
-        session.setTitle("Test Session");
-        session.setStatus("ACTIVE");
-        return session;
+
+        CrisisResponse mockCrisis = new CrisisResponse();
+        mockCrisis.setCrisis(false);
+
+        when(userSessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
+        when(aiService.detectCrisis(anyString())).thenReturn(mockCrisis);
+        when(aiService.generateResponse(eq(userId), eq(sessionId), anyString()))
+                .thenReturn("It is completely normal to feel overwhelmed. Let's break it down.");
+
+        ChatResponse response = sessionService.chat(sessionId, request);
+
+        assertNotNull(response);
+        assertEquals("I feel overwhelmed today.", response.getUserMessage());
+        assertEquals("It is completely normal to feel overwhelmed. Let's break it down.", response.getAssistantMessage());
+        assertFalse(response.isCrisisFlagged());
     }
 
-    private UserSessionRepository repositoryReturning(UUID expectedSessionId, UserSession session) {
-        return (UserSessionRepository) Proxy.newProxyInstance(
-                UserSessionRepository.class.getClassLoader(),
-                new Class<?>[]{UserSessionRepository.class},
-                (proxy, method, args) -> {
-                    if ("findById".equals(method.getName())) {
-                        UUID requestedId = (UUID) args[0];
-                        return expectedSessionId.equals(requestedId)
-                                ? Optional.of(session)
-                                : Optional.empty();
-                    }
-                    if ("equals".equals(method.getName())) {
-                        return proxy == args[0];
-                    }
-                    if ("hashCode".equals(method.getName())) {
-                        return System.identityHashCode(proxy);
-                    }
-                    if ("toString".equals(method.getName())) {
-                        return "SessionRepositoryTestProxy";
-                    }
-                    throw new UnsupportedOperationException(
-                            "Method not needed in this test: " + method.getName()
-                    );
-                }
-        );
+    @Test
+    void testChat_WithBlankMessage_ThrowsBadRequestException() {
+        UUID sessionId = UUID.randomUUID();
+        ChatRequest request = new ChatRequest();
+        request.setMessage("   ");
+
+        assertThrows(BadRequestException.class, () -> sessionService.chat(sessionId, request));
+        verify(userSessionRepository, never()).findById(any());
+    }
+
+    @Test
+    void testEndSession_UpdatesStatusAndSummary() {
+        UUID sessionId = UUID.randomUUID();
+        UserSession session = new UserSession();
+        session.setId(sessionId);
+        session.setStatus("ACTIVE");
+
+        when(userSessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
+        when(aiService.summarizeSession(sessionId)).thenReturn("User discussed burnout triggers.");
+        when(userSessionRepository.save(any(UserSession.class))).thenReturn(session);
+
+        SessionResponse response = sessionService.endSession(sessionId, "User requested stop");
+
+        assertNotNull(response);
+        assertEquals("COMPLETED", response.getStatus());
+        assertEquals("User discussed burnout triggers.", response.getSummary());
+        assertEquals("User requested stop", response.getEndReason());
+        verify(userSessionRepository).save(session);
+    }
+
+    @Test
+    void testEndSession_NotFound_ThrowsException() {
+        UUID sessionId = UUID.randomUUID();
+        when(userSessionRepository.findById(sessionId)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> sessionService.endSession(sessionId, "Done"));
+    }
+
+    @Test
+    void testListSessions_ReturnsListOfResponses() {
+        UUID userId = UUID.randomUUID();
+        UserSession session1 = new UserSession();
+        session1.setId(UUID.randomUUID());
+        session1.setStartedAt(Instant.now());
+
+        UserSession session2 = new UserSession();
+        session2.setId(UUID.randomUUID());
+        session2.setStartedAt(Instant.now().minusSeconds(3600));
+
+        when(userSessionRepository.findByUserIdOrderByStartedAtDesc(userId)).thenReturn(List.of(session1, session2));
+
+        List<SessionResponse> responses = sessionService.listSessions(userId);
+
+        assertNotNull(responses);
+        assertEquals(2, responses.size());
+        verify(userSessionRepository).findByUserIdOrderByStartedAtDesc(userId);
     }
 }

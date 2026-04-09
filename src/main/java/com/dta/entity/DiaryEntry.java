@@ -5,8 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import java.time.Instant;
 import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Table(name = "diary_entries")
@@ -29,6 +33,14 @@ public class DiaryEntry {
 
     @Column(length = 2000)
     private String suggestedDistortions;
+
+    @ManyToMany
+    @JoinTable(
+        name = "diary_distortions",
+        joinColumns = @JoinColumn(name = "diary_entry_id"),
+        inverseJoinColumns = @JoinColumn(name = "distortion_id")
+    )
+    private List<CognitiveDistortion> distortions;
 
     @Column(nullable = false)
     private Instant createdAt;
@@ -97,5 +109,13 @@ public class DiaryEntry {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<CognitiveDistortion> getDistortions() {
+        return distortions;
+    }
+
+    public void setDistortions(List<CognitiveDistortion> distortions) {
+        this.distortions = distortions;
     }
 }

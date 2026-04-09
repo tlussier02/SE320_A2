@@ -23,20 +23,21 @@ public class ProgressServiceImpl implements ProgressService {
 
     @Override
     public ProgressResponse getWeeklyProgress(UUID userId) {
-        return buildProgress(userId, "weekly", 0.45);
+        return buildProgress(userId, "weekly", 0.10);
     }
 
     @Override
     public ProgressResponse getMonthlyProgress(UUID userId) {
-        return buildProgress(userId, "monthly", 0.62);
+        return buildProgress(userId, "monthly", 0.20);
     }
 
     @Override
     public ProgressResponse getBurnoutProgress(UUID userId) {
-        return buildProgress(userId, "burnout", 0.58);
+        return buildProgress(userId, "burnout", 0.30);
     }
 
     private ProgressResponse buildProgress(UUID userId, String timeframe, double baseScore) {
+        // Replace hardcoded counts with real database queries
         int completedSessions = (int) userSessionRepository
                 .countByUserIdAndStatusIgnoreCase(userId, "COMPLETED");
         int diaryEntries = (int) diaryEntryRepository.countByUserId(userId);
@@ -44,10 +45,15 @@ public class ProgressServiceImpl implements ProgressService {
         ProgressResponse response = new ProgressResponse();
         response.setUserId(userId);
         response.setTimeframe(timeframe);
-        response.setScore(Math.min(1.0, baseScore + (completedSessions * 0.05) + (diaryEntries * 0.03)));
+        
+        // Calculate a dynamic score capped at 1.0 (100%)
+        double calculatedScore = baseScore + (completedSessions * 0.05) + (diaryEntries * 0.03);
+        response.setScore(Math.min(1.0, calculatedScore));
+        
         response.setCompletedSessions(completedSessions);
         response.setDiaryEntries(diaryEntries);
-        response.setCrisisAlerts(0);
+        response.setCrisisAlerts(0); // This can be updated once CrisisService tracking is added
+        
         response.setBurnoutTrend(completedSessions >= 3 ? "improving" : "early-stage");
         response.setHighlights(List.of(
                 "Session consistency is improving.",
