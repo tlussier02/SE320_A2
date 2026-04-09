@@ -1,0 +1,74 @@
+@startuml
+title Digital Therapy Assistant - Component Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam rectangle {
+  RoundCorner 12
+}
+
+package "Controllers" {
+  rectangle "AuthController" as AuthController
+  rectangle "SessionController" as SessionController
+  rectangle "DiaryController" as DiaryController
+  rectangle "ProgressController" as ProgressController
+  rectangle "CrisisController" as CrisisController
+}
+
+package "Services" {
+  rectangle "AuthServiceImpl" as AuthService
+  rectangle "SessionServiceImpl" as SessionService
+  rectangle "DiaryServiceImpl" as DiaryService
+  rectangle "ProgressServiceImpl" as ProgressService
+  rectangle "CrisisServiceImpl" as CrisisService
+  rectangle "AiServiceImpl" as AiService
+}
+
+package "Security" {
+  rectangle "SecurityConfig" as SecurityConfig
+  rectangle "JwtAuthFilter" as JwtFilter
+  rectangle "JwtUtil" as JwtUtil
+  rectangle "UserDetailsServiceImpl" as UserDetails
+}
+
+package "AI Integration" {
+  rectangle "KnowledgeBaseLoader" as KnowledgeBaseLoader
+  rectangle "RagContextBuilder" as RagContextBuilder
+  rectangle "CrisisDetector" as CrisisDetector
+}
+
+package "Repositories" {
+  rectangle "UserRepository" as UserRepository
+  rectangle "UserSessionRepository" as UserSessionRepository
+  rectangle "DiaryEntryRepository" as DiaryEntryRepository
+  rectangle "RefreshTokenRepository" as RefreshTokenRepository
+  rectangle "TrustedContactRepository" as TrustedContactRepository
+}
+
+AuthController --> AuthService
+SessionController --> SessionService
+DiaryController --> DiaryService
+ProgressController --> ProgressService
+CrisisController --> CrisisService
+
+AuthService --> UserRepository
+AuthService --> RefreshTokenRepository
+AuthService --> JwtUtil
+SessionService --> UserSessionRepository
+SessionService --> AiService
+DiaryService --> DiaryEntryRepository
+DiaryService --> AiService
+ProgressService --> UserSessionRepository
+ProgressService --> DiaryEntryRepository
+CrisisService --> AiService
+CrisisService --> TrustedContactRepository
+
+AiService --> KnowledgeBaseLoader
+AiService --> RagContextBuilder
+AiService --> CrisisDetector
+
+SecurityConfig --> JwtFilter
+SecurityConfig --> JwtUtil
+SecurityConfig --> UserDetails
+
+@enduml

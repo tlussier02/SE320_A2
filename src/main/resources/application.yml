@@ -8,12 +8,12 @@ spring:
     password: password
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     open-in-view: false
     show-sql: false
   sql:
     init:
-      mode: never
+      mode: always
   h2:
     console:
       enabled: true
@@ -28,6 +28,8 @@ logging:
     com.dta: DEBUG
 
 app:
+  cli:
+    enabled: true
   security:
     jwt:
       secret: ZmFrZS1qd3Qtc2VjcmV0LWZvci1sb2NhbC1kZXZlbG9wbWVudC1vbmx5LXNob3VsZC1iZS1vdmVycmlkZGVu

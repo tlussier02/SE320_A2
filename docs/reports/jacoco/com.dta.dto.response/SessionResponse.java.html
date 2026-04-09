@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.dto.response</a> &gt; <span class="el_source">SessionResponse.java</span></div><h1>SessionResponse.java</h1><pre class="source lang-java linenums">package com.dta.dto.response;
+
+import java.time.Instant;
+import java.util.UUID;
+
+<span class="fc" id="L6">public class SessionResponse {</span>
+
+    private UUID sessionId;
+    private UUID userId;
+    private String title;
+    private String status;
+    private Instant startedAt;
+    private Instant endedAt;
+    private String summary;
+    private String endReason;
+
+    public UUID getSessionId() {
+<span class="nc" id="L18">        return sessionId;</span>
+    }
+
+    public void setSessionId(UUID sessionId) {
+<span class="fc" id="L22">        this.sessionId = sessionId;</span>
+<span class="fc" id="L23">    }</span>
+
+    public UUID getUserId() {
+<span class="nc" id="L26">        return userId;</span>
+    }
+
+    public void setUserId(UUID userId) {
+<span class="fc" id="L30">        this.userId = userId;</span>
+<span class="fc" id="L31">    }</span>
+
+    public String getTitle() {
+<span class="fc" id="L34">        return title;</span>
+    }
+
+    public void setTitle(String title) {
+<span class="fc" id="L38">        this.title = title;</span>
+<span class="fc" id="L39">    }</span>
+
+    public String getStatus() {
+<span class="fc" id="L42">        return status;</span>
+    }
+
+    public void setStatus(String status) {
+<span class="fc" id="L46">        this.status = status;</span>
+<span class="fc" id="L47">    }</span>
+
+    public Instant getStartedAt() {
+<span class="nc" id="L50">        return startedAt;</span>
+    }
+
+    public void setStartedAt(Instant startedAt) {
+<span class="fc" id="L54">        this.startedAt = startedAt;</span>
+<span class="fc" id="L55">    }</span>
+
+    public Instant getEndedAt() {
+<span class="nc" id="L58">        return endedAt;</span>
+    }
+
+    public void setEndedAt(Instant endedAt) {
+<span class="fc" id="L62">        this.endedAt = endedAt;</span>
+<span class="fc" id="L63">    }</span>
+
+    public String getSummary() {
+<span class="fc" id="L66">        return summary;</span>
+    }
+
+    public void setSummary(String summary) {
+<span class="fc" id="L70">        this.summary = summary;</span>
+<span class="fc" id="L71">    }</span>
+
+    public String getEndReason() {
+<span class="fc" id="L74">        return endReason;</span>
+    }
+
+    public void setEndReason(String endReason) {
+<span class="fc" id="L78">        this.endReason = endReason;</span>
+<span class="fc" id="L79">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

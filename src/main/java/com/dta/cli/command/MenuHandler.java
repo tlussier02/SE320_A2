@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class MenuHandler {
     private final Map<Integer, Command> commands = new LinkedHashMap<>();
     private final Scanner scanner;
+    private boolean running = true;
 
     public MenuHandler(Scanner scanner) {
         this.scanner = scanner;
@@ -22,22 +23,37 @@ public class MenuHandler {
         System.out.print("Choose an option: ");
     }
 
-    public void handleInput() {
-        if (scanner.hasNextInt()) {
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
-            
+    public boolean handleInput() {
+        if (!scanner.hasNextLine()) {
+            return false;
+        }
+
+        String rawChoice = scanner.nextLine().trim();
+        if (rawChoice.isEmpty()) {
+            System.out.println("Invalid input. Please enter a number.");
+            return running;
+        }
+
+        try {
+            int choice = Integer.parseInt(rawChoice);
             Command cmd = commands.get(choice);
             if (cmd != null) {
                 cmd.execute();
             } else {
                 System.out.println("Invalid option. Please try again.");
             }
-        } else {
+        } catch (NumberFormatException ex) {
             System.out.println("Invalid input. Please enter a number.");
-            if (scanner.hasNext()) {
-                scanner.next(); // Clear the bad input
-            }
         }
+
+        return running;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void stop() {
+        running = false;
     }
 }

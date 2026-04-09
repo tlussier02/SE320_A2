@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CrisisController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.controller</a> &gt; <span class="el_source">CrisisController.java</span></div><h1>CrisisController.java</h1><pre class="source lang-java linenums">package com.dta.controller;
+
+import com.dta.dto.request.DistortionSuggestionRequest;
+import com.dta.dto.request.UpdateSafetyPlanRequest;
+import com.dta.dto.response.CrisisResponse;
+import com.dta.dto.response.SafetyPlanResponse;
+import com.dta.service.CrisisService;
+import jakarta.validation.Valid;
+import java.util.UUID;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(&quot;/crisis&quot;)
+public class CrisisController {
+
+    private final CrisisService crisisService;
+
+<span class="nc" id="L25">    public CrisisController(CrisisService crisisService) {</span>
+<span class="nc" id="L26">        this.crisisService = crisisService;</span>
+<span class="nc" id="L27">    }</span>
+
+    @GetMapping
+    public ResponseEntity&lt;CrisisResponse&gt; crisisState() {
+<span class="nc" id="L31">        return ResponseEntity.ok(crisisService.getCrisisOverview());</span>
+    }
+
+    @PostMapping(&quot;/detect&quot;)
+    public ResponseEntity&lt;CrisisResponse&gt; detect(
+            @Valid @RequestBody DistortionSuggestionRequest request) {
+<span class="nc" id="L37">        return ResponseEntity.ok(crisisService.detectCrisis(request));</span>
+    }
+
+    @GetMapping(&quot;/safety-plan&quot;)
+    public ResponseEntity&lt;SafetyPlanResponse&gt; getSafetyPlan(@RequestParam UUID userId) {
+<span class="nc" id="L42">        return ResponseEntity.ok(crisisService.getSafetyPlan(userId));</span>
+    }
+
+    @PutMapping(&quot;/safety-plan&quot;)
+    public ResponseEntity&lt;SafetyPlanResponse&gt; updateSafetyPlan(
+            @Valid @RequestBody UpdateSafetyPlanRequest request) {
+<span class="nc" id="L48">        return ResponseEntity.ok(crisisService.updateSafetyPlan(request));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

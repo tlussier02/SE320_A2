@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SessionServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.service.impl</a> &gt; <span class="el_source">SessionServiceImpl.java</span></div><h1>SessionServiceImpl.java</h1><pre class="source lang-java linenums">package com.dta.service.impl;
+
+import com.dta.dto.request.ChatRequest;
+import com.dta.dto.request.StartSessionRequest;
+import com.dta.dto.response.ChatResponse;
+import com.dta.dto.response.CrisisResponse;
+import com.dta.dto.response.SessionResponse;
+import com.dta.entity.UserSession;
+import com.dta.exception.BadRequestException;
+import com.dta.exception.ResourceNotFoundException;
+import com.dta.repository.UserSessionRepository;
+import com.dta.service.AiService;
+import com.dta.service.SessionService;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional(readOnly = true)
+public class SessionServiceImpl implements SessionService {
+
+    private final UserSessionRepository userSessionRepository;
+    private final AiService aiService;
+
+<span class="fc" id="L27">    public SessionServiceImpl(UserSessionRepository userSessionRepository, AiService aiService) {</span>
+<span class="fc" id="L28">        this.userSessionRepository = userSessionRepository;</span>
+<span class="fc" id="L29">        this.aiService = aiService;</span>
+<span class="fc" id="L30">    }</span>
+
+    @Override
+    @Transactional
+    public SessionResponse startSession(UUID sessionTemplateId, StartSessionRequest request) {
+<span class="fc" id="L35">        UserSession session = new UserSession();</span>
+<span class="fc" id="L36">        session.setUserId(request.getUserId());</span>
+<span class="fc" id="L37">        session.setTitle(resolveTitle(sessionTemplateId, request));</span>
+<span class="fc" id="L38">        session.setStatus(&quot;ACTIVE&quot;);</span>
+
+<span class="fc" id="L40">        return map(userSessionRepository.save(session), null);</span>
+    }
+
+    @Override
+    @Transactional
+    public ChatResponse chat(UUID sessionId, ChatRequest request) {
+<span class="pc bpc" id="L46" title="1 of 4 branches missed.">        if (request.getMessage() == null || request.getMessage().isBlank()) {</span>
+<span class="fc" id="L47">            throw new BadRequestException(&quot;Message cannot be blank.&quot;);</span>
+        }
+
+<span class="fc" id="L50">        UserSession session = userSessionRepository.findById(sessionId)</span>
+<span class="pc" id="L51">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Session not found.&quot;));</span>
+<span class="fc" id="L52">        CrisisResponse assessment = aiService.detectCrisis(request.getMessage());</span>
+<span class="fc" id="L53">        String aiReply = aiService.generateResponse(</span>
+<span class="fc" id="L54">                session.getUserId(),</span>
+                sessionId,
+<span class="fc" id="L56">                request.getMessage()</span>
+        );
+
+<span class="fc" id="L59">        ChatResponse response = new ChatResponse();</span>
+<span class="fc" id="L60">        response.setSessionId(sessionId);</span>
+<span class="fc" id="L61">        response.setUserMessage(request.getMessage());</span>
+<span class="fc" id="L62">        response.setAssistantMessage(aiReply);</span>
+<span class="fc" id="L63">        response.setCrisisFlagged(assessment.isCrisis());</span>
+<span class="fc" id="L64">        response.setTimestamp(Instant.now());</span>
+<span class="fc" id="L65">        return response;</span>
+    }
+
+    @Override
+    @Transactional
+    public SessionResponse endSession(UUID sessionId, String reason) {
+<span class="fc" id="L71">        UserSession session = userSessionRepository.findById(sessionId)</span>
+<span class="fc" id="L72">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Session not found.&quot;));</span>
+<span class="fc" id="L73">        session.setStatus(&quot;COMPLETED&quot;);</span>
+<span class="fc" id="L74">        session.setEndedAt(Instant.now());</span>
+<span class="fc" id="L75">        session.setSummary(aiService.summarizeSession(sessionId));</span>
+<span class="fc" id="L76">        return map(userSessionRepository.save(session), reason);</span>
+    }
+
+    @Override
+    public List&lt;SessionResponse&gt; listSessions(UUID userId) {
+<span class="fc" id="L81">        return userSessionRepository.findByUserIdOrderByStartedAtDesc(userId)</span>
+<span class="fc" id="L82">                .stream()</span>
+<span class="fc" id="L83">                .map(session -&gt; map(session, null))</span>
+<span class="fc" id="L84">                .toList();</span>
+    }
+
+    private String resolveTitle(UUID sessionTemplateId, StartSessionRequest request) {
+<span class="pc bpc" id="L88" title="2 of 4 branches missed.">        if (request.getTitle() != null &amp;&amp; !request.getTitle().isBlank()) {</span>
+<span class="fc" id="L89">            return request.getTitle();</span>
+        }
+<span class="nc bnc" id="L91" title="All 4 branches missed.">        if (request.getMode() != null &amp;&amp; !request.getMode().isBlank()) {</span>
+<span class="nc" id="L92">            return &quot;DTA &quot; + request.getMode() + &quot; Session&quot;;</span>
+        }
+<span class="nc" id="L94">        return &quot;DTA Guided Session &quot; + sessionTemplateId;</span>
+    }
+
+    private SessionResponse map(UserSession session, String endReason) {
+<span class="fc" id="L98">        SessionResponse response = new SessionResponse();</span>
+<span class="fc" id="L99">        response.setSessionId(session.getId());</span>
+<span class="fc" id="L100">        response.setUserId(session.getUserId());</span>
+<span class="fc" id="L101">        response.setTitle(session.getTitle());</span>
+<span class="fc" id="L102">        response.setStatus(session.getStatus());</span>
+<span class="fc" id="L103">        response.setStartedAt(session.getStartedAt());</span>
+<span class="fc" id="L104">        response.setEndedAt(session.getEndedAt());</span>
+<span class="fc" id="L105">        response.setSummary(session.getSummary());</span>
+<span class="fc" id="L106">        response.setEndReason(endReason);</span>
+<span class="fc" id="L107">        return response;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

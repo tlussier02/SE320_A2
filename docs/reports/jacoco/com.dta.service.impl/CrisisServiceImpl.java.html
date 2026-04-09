@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CrisisServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.service.impl</a> &gt; <span class="el_source">CrisisServiceImpl.java</span></div><h1>CrisisServiceImpl.java</h1><pre class="source lang-java linenums">package com.dta.service.impl;
+
+import com.dta.dto.request.DistortionSuggestionRequest;
+import com.dta.dto.request.UpdateSafetyPlanRequest;
+import com.dta.dto.response.CrisisResponse;
+import com.dta.dto.response.SafetyPlanResponse;
+import com.dta.service.AiService;
+import com.dta.service.CrisisService;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CrisisServiceImpl implements CrisisService {
+
+    private static final String DEFAULT_SAFETY_PLAN =
+            &quot;1. Pause and breathe.\n2. Contact a trusted person.\n3. Use crisis resources if risk escalates.&quot;;
+
+    private final AiService aiService;
+<span class="fc" id="L22">    private final Map&lt;UUID, String&gt; safetyPlans = new ConcurrentHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L24">    public CrisisServiceImpl(AiService aiService) {</span>
+<span class="fc" id="L25">        this.aiService = aiService;</span>
+<span class="fc" id="L26">    }</span>
+
+    @Override
+    public CrisisResponse getCrisisOverview() {
+<span class="nc" id="L30">        CrisisResponse response = new CrisisResponse();</span>
+<span class="nc" id="L31">        response.setCrisis(false);</span>
+<span class="nc" id="L32">        response.setRiskLevel(&quot;none&quot;);</span>
+<span class="nc" id="L33">        response.setKeywordsDetected(List.of());</span>
+<span class="nc" id="L34">        response.setAction(&quot;none&quot;);</span>
+<span class="nc" id="L35">        response.setReasoning(&quot;No active crisis assessment has been triggered.&quot;);</span>
+<span class="nc" id="L36">        return response;</span>
+    }
+
+    @Override
+    public CrisisResponse detectCrisis(DistortionSuggestionRequest request) {
+<span class="fc" id="L41">        return aiService.detectCrisis(request.getText());</span>
+    }
+
+    @Override
+    public SafetyPlanResponse getSafetyPlan(UUID userId) {
+<span class="nc" id="L46">        SafetyPlanResponse response = new SafetyPlanResponse();</span>
+<span class="nc" id="L47">        response.setUserId(userId);</span>
+<span class="nc" id="L48">        response.setSafetyPlan(safetyPlans.getOrDefault(userId, DEFAULT_SAFETY_PLAN));</span>
+<span class="nc" id="L49">        return response;</span>
+    }
+
+    @Override
+    public SafetyPlanResponse updateSafetyPlan(UpdateSafetyPlanRequest request) {
+<span class="nc" id="L54">        safetyPlans.put(request.getUserId(), request.getSafetyPlan());</span>
+<span class="nc" id="L55">        SafetyPlanResponse response = new SafetyPlanResponse();</span>
+<span class="nc" id="L56">        response.setUserId(request.getUserId());</span>
+<span class="nc" id="L57">        response.setSafetyPlan(request.getSafetyPlan());</span>
+<span class="nc" id="L58">        return response;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

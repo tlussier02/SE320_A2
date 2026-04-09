@@ -1,0 +1,41 @@
+@startuml
+title Digital Therapy Assistant - Code Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam class {
+  BackgroundColor white
+}
+
+class DigitalTherapyAssistantApplication
+class DtaCli
+class MenuHandler
+interface Command
+class AuthServiceImpl
+class SessionServiceImpl
+class DiaryServiceImpl
+class ProgressServiceImpl
+class CrisisServiceImpl
+class AiServiceImpl
+class JwtUtil
+class User
+class UserSession
+class DiaryEntry
+class RefreshToken
+
+DigitalTherapyAssistantApplication --> DtaCli
+DtaCli --> MenuHandler
+MenuHandler --> Command
+
+AuthServiceImpl --> JwtUtil
+AuthServiceImpl --> User
+AuthServiceImpl --> RefreshToken
+
+SessionServiceImpl --> UserSession
+DiaryServiceImpl --> DiaryEntry
+CrisisServiceImpl --> AiServiceImpl
+SessionServiceImpl --> AiServiceImpl
+DiaryServiceImpl --> AiServiceImpl
+ProgressServiceImpl --> UserSession
+
+@enduml

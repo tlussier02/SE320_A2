@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DiaryController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.controller</a> &gt; <span class="el_source">DiaryController.java</span></div><h1>DiaryController.java</h1><pre class="source lang-java linenums">package com.dta.controller;
+
+import com.dta.dto.request.CreateDiaryEntryRequest;
+import com.dta.dto.request.DistortionSuggestionRequest;
+import com.dta.dto.response.DiaryEntryResponse;
+import com.dta.dto.response.ThoughtAnalysisResponse;
+import com.dta.service.DiaryService;
+import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(&quot;/diary&quot;)
+public class DiaryController {
+
+    private final DiaryService diaryService;
+
+<span class="nc" id="L29">    public DiaryController(DiaryService diaryService) {</span>
+<span class="nc" id="L30">        this.diaryService = diaryService;</span>
+<span class="nc" id="L31">    }</span>
+
+    @PostMapping(&quot;/entries&quot;)
+    @ResponseStatus(HttpStatus.CREATED)
+    public DiaryEntryResponse createEntry(@Valid @RequestBody CreateDiaryEntryRequest request) {
+<span class="nc" id="L36">        return diaryService.createDiaryEntry(request);</span>
+    }
+
+    @GetMapping(&quot;/entries&quot;)
+    public ResponseEntity&lt;List&lt;DiaryEntryResponse&gt;&gt; getEntries(@RequestParam UUID userId) {
+<span class="nc" id="L41">        return ResponseEntity.ok(diaryService.getDiaryEntries(userId));</span>
+    }
+
+    @DeleteMapping(&quot;/entries/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteEntry(@PathVariable UUID id) {
+<span class="nc" id="L46">        diaryService.deleteDiaryEntry(id);</span>
+<span class="nc" id="L47">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @PostMapping(&quot;/distortions/suggest&quot;)
+    public ResponseEntity&lt;ThoughtAnalysisResponse&gt; suggest(
+            @Valid @RequestBody DistortionSuggestionRequest request) {
+<span class="nc" id="L53">        return ResponseEntity.ok(diaryService.suggestDistortions(request));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

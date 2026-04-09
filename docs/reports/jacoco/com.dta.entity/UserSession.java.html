@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserSession.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.entity</a> &gt; <span class="el_source">UserSession.java</span></div><h1>UserSession.java</h1><pre class="source lang-java linenums">package com.dta.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import java.time.Instant;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;user_sessions&quot;)
+<span class="fc" id="L13">public class UserSession {</span>
+
+    @Id
+    private UUID id;
+
+    @Column(nullable = false)
+    private UUID userId;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String status;
+
+    @Column(nullable = false)
+    private Instant startedAt;
+
+    private Instant endedAt;
+
+    @Column(length = 5000)
+    private String summary;
+
+    @PrePersist
+    void prePersist() {
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (id == null) {</span>
+<span class="nc" id="L38">            id = UUID.randomUUID();</span>
+        }
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (startedAt == null) {</span>
+<span class="nc" id="L41">            startedAt = Instant.now();</span>
+        }
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (status == null) {</span>
+<span class="nc" id="L44">            status = &quot;ACTIVE&quot;;</span>
+        }
+<span class="nc" id="L46">    }</span>
+
+    public UUID getId() {
+<span class="fc" id="L49">        return id;</span>
+    }
+
+    public void setId(UUID id) {
+<span class="fc" id="L53">        this.id = id;</span>
+<span class="fc" id="L54">    }</span>
+
+    public UUID getUserId() {
+<span class="fc" id="L57">        return userId;</span>
+    }
+
+    public void setUserId(UUID userId) {
+<span class="fc" id="L61">        this.userId = userId;</span>
+<span class="fc" id="L62">    }</span>
+
+    public String getTitle() {
+<span class="fc" id="L65">        return title;</span>
+    }
+
+    public void setTitle(String title) {
+<span class="fc" id="L69">        this.title = title;</span>
+<span class="fc" id="L70">    }</span>
+
+    public String getStatus() {
+<span class="fc" id="L73">        return status;</span>
+    }
+
+    public void setStatus(String status) {
+<span class="fc" id="L77">        this.status = status;</span>
+<span class="fc" id="L78">    }</span>
+
+    public Instant getStartedAt() {
+<span class="fc" id="L81">        return startedAt;</span>
+    }
+
+    public void setStartedAt(Instant startedAt) {
+<span class="fc" id="L85">        this.startedAt = startedAt;</span>
+<span class="fc" id="L86">    }</span>
+
+    public Instant getEndedAt() {
+<span class="fc" id="L89">        return endedAt;</span>
+    }
+
+    public void setEndedAt(Instant endedAt) {
+<span class="fc" id="L93">        this.endedAt = endedAt;</span>
+<span class="fc" id="L94">    }</span>
+
+    public String getSummary() {
+<span class="fc" id="L97">        return summary;</span>
+    }
+
+    public void setSummary(String summary) {
+<span class="fc" id="L101">        this.summary = summary;</span>
+<span class="fc" id="L102">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

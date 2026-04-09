@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CbtSession.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.entity</a> &gt; <span class="el_source">CbtSession.java</span></div><h1>CbtSession.java</h1><pre class="source lang-java linenums">package com.dta.entity;
+
+import jakarta.persistence.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Entity
+@Table(name = &quot;cbt_sessions&quot;)
+<span class="nc" id="L11">public class CbtSession {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // Link to the system user who owns this session
+    @Column(nullable = false)
+    private UUID userId;
+
+    @Column(name = &quot;focus_area&quot;, length = 255)
+    private String focusArea;
+
+    @Column(name = &quot;session_state&quot;, nullable = false, length = 50)
+    private String state;
+
+    @Column(nullable = false)
+    private Instant startedAt;
+
+    private Instant endedAt;
+
+    // Relationship to chat messages for history tracking
+<span class="nc" id="L33">    @OneToMany(mappedBy = &quot;cbtSession&quot;, cascade = CascadeType.ALL, orphanRemoval = true)</span>
+    private List&lt;ChatMessage&gt; messages = new ArrayList&lt;&gt;();
+
+    // Collection for AI-generated insights during the session
+<span class="nc" id="L37">    @ElementCollection</span>
+    @CollectionTable(name = &quot;cbt_session_insights&quot;, joinColumns = @JoinColumn(name = &quot;cbt_session_id&quot;))
+    @Column(name = &quot;insight&quot;)
+    private List&lt;String&gt; insights = new ArrayList&lt;&gt;();
+
+    @PrePersist
+    protected void onCreate() {
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (startedAt == null) {</span>
+<span class="nc" id="L45">            startedAt = Instant.now();</span>
+        }
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (state == null) {</span>
+<span class="nc" id="L48">            state = &quot;ACTIVE&quot;;</span>
+        }
+<span class="nc" id="L50">    }</span>
+
+    // Getters and Setters
+<span class="nc" id="L53">    public Long getId() { return id; }</span>
+<span class="nc" id="L54">    public void setId(Long id) { this.id = id; }</span>
+
+<span class="nc" id="L56">    public UUID getUserId() { return userId; }</span>
+<span class="nc" id="L57">    public void setUserId(UUID userId) { this.userId = userId; }</span>
+
+<span class="nc" id="L59">    public String getFocusArea() { return focusArea; }</span>
+<span class="nc" id="L60">    public void setFocusArea(String focusArea) { this.focusArea = focusArea; }</span>
+
+<span class="nc" id="L62">    public String getState() { return state; }</span>
+<span class="nc" id="L63">    public void setState(String state) { this.state = state; }</span>
+
+<span class="nc" id="L65">    public Instant getStartedAt() { return startedAt; }</span>
+<span class="nc" id="L66">    public void setStartedAt(Instant startedAt) { this.startedAt = startedAt; }</span>
+
+<span class="nc" id="L68">    public Instant getEndedAt() { return endedAt; }</span>
+<span class="nc" id="L69">    public void setEndedAt(Instant endedAt) { this.endedAt = endedAt; }</span>
+
+<span class="nc" id="L71">    public List&lt;ChatMessage&gt; getMessages() { return messages; }</span>
+<span class="nc" id="L72">    public void setMessages(List&lt;ChatMessage&gt; messages) { this.messages = messages; }</span>
+
+<span class="nc" id="L74">    public List&lt;String&gt; getInsights() { return insights; }</span>
+<span class="nc" id="L75">    public void setInsights(List&lt;String&gt; insights) { this.insights = insights; }</span>
+    
+    // Helper method to maintain bi-directional relationship
+    public void addMessage(ChatMessage message) {
+<span class="nc" id="L79">        messages.add(message);</span>
+<span class="nc" id="L80">        message.setCbtSession(this);</span>
+<span class="nc" id="L81">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

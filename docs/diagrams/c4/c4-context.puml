@@ -1,0 +1,26 @@
+@startuml
+title Digital Therapy Assistant - System Context
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam rectangle {
+  RoundCorner 12
+}
+
+actor Patient
+actor Therapist
+actor Administrator
+
+rectangle "Digital Therapy Assistant" as DTA
+rectangle "LLM Provider" as LLM
+rectangle "Email Service" as EMAIL
+rectangle "EHR Systems" as EHR
+
+Patient --> DTA : uses CBT support,\ndiary, progress, and crisis tools
+Therapist --> DTA : reviews support data\nand patient outcomes
+Administrator --> DTA : manages operations\nand configuration
+DTA --> LLM : requests analysis\nand generated responses
+DTA --> EMAIL : sends notifications\nand support messages
+DTA --> EHR : exchanges care context\nand outcome data
+
+@enduml

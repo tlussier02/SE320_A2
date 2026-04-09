@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CognitiveDistortion.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.entity</a> &gt; <span class="el_source">CognitiveDistortion.java</span></div><h1>CognitiveDistortion.java</h1><pre class="source lang-java linenums">package com.dta.entity;
+
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = &quot;cognitive_distortions&quot;)
+<span class="nc" id="L9">public class CognitiveDistortion {</span>
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String label;
+
+    @Column(nullable = false, columnDefinition = &quot;TEXT&quot;)
+    private String description;
+
+    @Column(name = &quot;cbt_prompt_mapping&quot;, columnDefinition = &quot;TEXT&quot;)
+    private String cbtPromptMapping;
+
+    // Many-to-Many relationship with DiaryEntry as defined in your ER diagram
+<span class="nc" id="L25">    @ManyToMany(mappedBy = &quot;distortions&quot;)</span>
+    private List&lt;DiaryEntry&gt; diaryEntries = new ArrayList&lt;&gt;();
+
+    // Standard Getters and Setters
+<span class="nc" id="L29">    public Long getId() { return id; }</span>
+<span class="nc" id="L30">    public void setId(Long id) { this.id = id; }</span>
+
+<span class="nc" id="L32">    public String getLabel() { return label; }</span>
+<span class="nc" id="L33">    public void setLabel(String label) { this.label = label; }</span>
+
+<span class="nc" id="L35">    public String getDescription() { return description; }</span>
+<span class="nc" id="L36">    public void setDescription(String description) { this.description = description; }</span>
+
+<span class="nc" id="L38">    public String getCbtPromptMapping() { return cbtPromptMapping; }</span>
+<span class="nc" id="L39">    public void setCbtPromptMapping(String cbtPromptMapping) { this.cbtPromptMapping = cbtPromptMapping; }</span>
+
+<span class="nc" id="L41">    public List&lt;DiaryEntry&gt; getDiaryEntries() { return diaryEntries; }</span>
+<span class="nc" id="L42">    public void setDiaryEntries(List&lt;DiaryEntry&gt; diaryEntries) { this.diaryEntries = diaryEntries; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

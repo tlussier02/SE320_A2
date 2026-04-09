@@ -1,0 +1,26 @@
+@startuml
+title Digital Therapy Assistant - Container Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam rectangle {
+  RoundCorner 12
+}
+
+actor User
+
+rectangle "CLI Application\nMenu-driven startup workflow" as CLI
+rectangle "Spring Boot Application\nREST API, auth, business logic" as API
+database "H2 Database\nUsers, sessions, diary, tokens" as H2
+rectangle "Simple Vector Store\nKnowledge retrieval context" as VECTOR
+rectangle "Knowledge Base\nCBT reference material" as KB
+
+User --> CLI : terminal workflow access
+User --> API : HTTP requests
+CLI --> API : shares startup endpoints\nand feature guidance
+API --> H2 : persists application data
+API --> VECTOR : retrieves ranked context
+API --> KB : loads CBT prompts and guidance
+VECTOR --> KB : indexes knowledge content
+
+@enduml

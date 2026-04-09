@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthenticationCommand.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.cli.commands</a> &gt; <span class="el_source">AuthenticationCommand.java</span></div><h1>AuthenticationCommand.java</h1><pre class="source lang-java linenums">package com.dta.cli.commands;
+
+import com.dta.cli.CliPrompts;
+import com.dta.cli.CliState;
+import com.dta.cli.Command;
+import com.dta.dto.request.LoginRequest;
+import com.dta.dto.request.RefreshRequest;
+import com.dta.dto.request.RegisterRequest;
+import com.dta.dto.response.AuthResponse;
+import com.dta.service.AuthService;
+import java.util.Scanner;
+
+public class AuthenticationCommand implements Command {
+
+    private final Scanner scanner;
+    private final CliState state;
+    private final AuthService authService;
+
+<span class="fc" id="L19">    public AuthenticationCommand(Scanner scanner, CliState state, AuthService authService) {</span>
+<span class="fc" id="L20">        this.scanner = scanner;</span>
+<span class="fc" id="L21">        this.state = state;</span>
+<span class="fc" id="L22">        this.authService = authService;</span>
+<span class="fc" id="L23">    }</span>
+
+    @Override
+    public void execute() {
+        while (true) {
+<span class="nc" id="L28">            CliPrompts.printHeader(&quot;Authentication&quot;);</span>
+<span class="nc" id="L29">            System.out.println(&quot;1. Register&quot;);</span>
+<span class="nc" id="L30">            System.out.println(&quot;2. Login&quot;);</span>
+<span class="nc" id="L31">            System.out.println(&quot;3. Logout&quot;);</span>
+<span class="nc" id="L32">            System.out.println(&quot;0. Back&quot;);</span>
+
+<span class="nc" id="L34">            String choice = CliPrompts.prompt(scanner, &quot;Select an option: &quot;);</span>
+<span class="nc bnc" id="L35" title="All 4 branches missed.">            if (choice == null || &quot;0&quot;.equals(choice)) {</span>
+<span class="nc" id="L36">                return;</span>
+            }
+
+            try {
+<span class="nc bnc" id="L40" title="All 4 branches missed.">                switch (choice) {</span>
+<span class="nc" id="L41">                    case &quot;1&quot; -&gt; register();</span>
+<span class="nc" id="L42">                    case &quot;2&quot; -&gt; login();</span>
+<span class="nc" id="L43">                    case &quot;3&quot; -&gt; logout();</span>
+<span class="nc" id="L44">                    default -&gt; System.out.println(&quot;Invalid option. Please try again.&quot;);</span>
+                }
+<span class="nc" id="L46">            } catch (RuntimeException ex) {</span>
+<span class="nc" id="L47">                System.out.println(&quot;Authentication error: &quot; + ex.getMessage());</span>
+<span class="nc" id="L48">            }</span>
+<span class="nc" id="L49">        }</span>
+    }
+
+    @Override
+    public String getDescription() {
+<span class="fc" id="L54">        return &quot;Authentication&quot;;</span>
+    }
+
+    private void register() {
+<span class="nc" id="L58">        RegisterRequest request = new RegisterRequest();</span>
+<span class="nc" id="L59">        request.setFullName(CliPrompts.prompt(scanner, &quot;Full name: &quot;));</span>
+<span class="nc" id="L60">        request.setEmail(CliPrompts.prompt(scanner, &quot;Email: &quot;));</span>
+<span class="nc" id="L61">        request.setPassword(CliPrompts.promptPassword(scanner, &quot;Password: &quot;));</span>
+
+<span class="nc" id="L63">        AuthResponse response = authService.register(request);</span>
+<span class="nc" id="L64">        state.setCurrentUserId(response.getUserId());</span>
+<span class="nc" id="L65">        state.setCurrentUserEmail(response.getEmail());</span>
+<span class="nc" id="L66">        state.setCurrentRefreshToken(response.getRefreshToken());</span>
+<span class="nc" id="L67">        System.out.println(&quot;Registered and logged in as &quot; + response.getEmail());</span>
+<span class="nc" id="L68">    }</span>
+
+    private void login() {
+<span class="nc" id="L71">        LoginRequest request = new LoginRequest();</span>
+<span class="nc" id="L72">        request.setEmail(CliPrompts.prompt(scanner, &quot;Email: &quot;));</span>
+<span class="nc" id="L73">        request.setPassword(CliPrompts.promptPassword(scanner, &quot;Password: &quot;));</span>
+
+<span class="nc" id="L75">        AuthResponse response = authService.login(request);</span>
+<span class="nc" id="L76">        state.setCurrentUserId(response.getUserId());</span>
+<span class="nc" id="L77">        state.setCurrentUserEmail(response.getEmail());</span>
+<span class="nc" id="L78">        state.setCurrentRefreshToken(response.getRefreshToken());</span>
+<span class="nc" id="L79">        System.out.println(&quot;Logged in as &quot; + response.getEmail());</span>
+<span class="nc" id="L80">    }</span>
+
+    private void logout() {
+<span class="nc bnc" id="L83" title="All 4 branches missed.">        if (state.getCurrentRefreshToken() == null || state.getCurrentRefreshToken().isBlank()) {</span>
+<span class="nc" id="L84">            System.out.println(&quot;No active login session was found.&quot;);</span>
+<span class="nc" id="L85">            state.clearAuthentication();</span>
+<span class="nc" id="L86">            return;</span>
+        }
+
+<span class="nc" id="L89">        RefreshRequest request = new RefreshRequest();</span>
+<span class="nc" id="L90">        request.setRefreshToken(state.getCurrentRefreshToken());</span>
+<span class="nc" id="L91">        authService.logout(request);</span>
+<span class="nc" id="L92">        state.clearAuthentication();</span>
+<span class="nc" id="L93">        System.out.println(&quot;Logged out.&quot;);</span>
+<span class="nc" id="L94">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

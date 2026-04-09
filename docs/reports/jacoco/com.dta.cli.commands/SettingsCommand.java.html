@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SettingsCommand.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.cli.commands</a> &gt; <span class="el_source">SettingsCommand.java</span></div><h1>SettingsCommand.java</h1><pre class="source lang-java linenums">package com.dta.cli.commands;
+
+import com.dta.cli.CliState;
+import com.dta.cli.Command;
+
+public class SettingsCommand implements Command {
+
+    private final CliState state;
+
+<span class="fc" id="L10">    public SettingsCommand(CliState state) {</span>
+<span class="fc" id="L11">        this.state = state;</span>
+<span class="fc" id="L12">    }</span>
+
+    @Override
+    public void execute() {
+<span class="nc" id="L16">        System.out.println(&quot;Application URLs&quot;);</span>
+<span class="nc" id="L17">        System.out.println(&quot;- Swagger UI: http://localhost:8080/swagger-ui/index.html&quot;);</span>
+<span class="nc" id="L18">        System.out.println(&quot;- H2 Console: http://localhost:8080/h2-console/login.jsp&quot;);</span>
+<span class="nc" id="L19">        System.out.println(&quot;- API Docs: http://localhost:8080/v3/api-docs&quot;);</span>
+<span class="nc bnc" id="L20" title="All 2 branches missed.">        if (state.isAuthenticated()) {</span>
+<span class="nc" id="L21">            System.out.println(&quot;Current user: &quot; + state.getCurrentUserEmail());</span>
+        } else {
+<span class="nc" id="L23">            System.out.println(&quot;Current user: not logged in&quot;);</span>
+        }
+<span class="nc" id="L25">    }</span>
+
+    @Override
+    public String getDescription() {
+<span class="fc" id="L29">        return &quot;Settings&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

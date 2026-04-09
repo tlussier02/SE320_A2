@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChatResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.dto.response</a> &gt; <span class="el_source">ChatResponse.java</span></div><h1>ChatResponse.java</h1><pre class="source lang-java linenums">package com.dta.dto.response;
+
+import java.time.Instant;
+import java.util.UUID;
+
+<span class="fc" id="L6">public class ChatResponse {</span>
+
+    private UUID sessionId;
+    private String userMessage;
+    private String assistantMessage;
+    private boolean crisisFlagged;
+    private Instant timestamp;
+
+    public UUID getSessionId() {
+<span class="nc" id="L15">        return sessionId;</span>
+    }
+
+    public void setSessionId(UUID sessionId) {
+<span class="fc" id="L19">        this.sessionId = sessionId;</span>
+<span class="fc" id="L20">    }</span>
+
+    public String getUserMessage() {
+<span class="fc" id="L23">        return userMessage;</span>
+    }
+
+    public void setUserMessage(String userMessage) {
+<span class="fc" id="L27">        this.userMessage = userMessage;</span>
+<span class="fc" id="L28">    }</span>
+
+    public String getAssistantMessage() {
+<span class="fc" id="L31">        return assistantMessage;</span>
+    }
+
+    public void setAssistantMessage(String assistantMessage) {
+<span class="fc" id="L35">        this.assistantMessage = assistantMessage;</span>
+<span class="fc" id="L36">    }</span>
+
+    public boolean isCrisisFlagged() {
+<span class="fc" id="L39">        return crisisFlagged;</span>
+    }
+
+    public void setCrisisFlagged(boolean crisisFlagged) {
+<span class="fc" id="L43">        this.crisisFlagged = crisisFlagged;</span>
+<span class="fc" id="L44">    }</span>
+
+    public Instant getTimestamp() {
+<span class="nc" id="L47">        return timestamp;</span>
+    }
+
+    public void setTimestamp(Instant timestamp) {
+<span class="fc" id="L51">        this.timestamp = timestamp;</span>
+<span class="fc" id="L52">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

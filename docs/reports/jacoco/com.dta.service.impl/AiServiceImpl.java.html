@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AiServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">digital-therapy-assistant</a> &gt; <a href="index.source.html" class="el_package">com.dta.service.impl</a> &gt; <span class="el_source">AiServiceImpl.java</span></div><h1>AiServiceImpl.java</h1><pre class="source lang-java linenums">package com.dta.service.impl;
+
+import com.dta.ai.CbtKnowledgeEntry;
+import com.dta.ai.CrisisAssessmentResult;
+import com.dta.ai.CrisisDetector;
+import com.dta.ai.KnowledgeBaseLoader;
+import com.dta.ai.RagContextBuilder;
+import com.dta.dto.response.CrisisResponse;
+import com.dta.dto.response.ThoughtAnalysisResponse;
+import com.dta.service.AiService;
+import java.util.List;
+import java.util.UUID;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AiServiceImpl implements AiService {
+
+    private final RagContextBuilder contextBuilder;
+    private final KnowledgeBaseLoader knowledgeBaseLoader;
+    private final CrisisDetector crisisDetector;
+
+    public AiServiceImpl(
+            RagContextBuilder contextBuilder,
+            KnowledgeBaseLoader knowledgeBaseLoader,
+<span class="fc" id="L25">            CrisisDetector crisisDetector) {</span>
+<span class="fc" id="L26">        this.contextBuilder = contextBuilder;</span>
+<span class="fc" id="L27">        this.knowledgeBaseLoader = knowledgeBaseLoader;</span>
+<span class="fc" id="L28">        this.crisisDetector = crisisDetector;</span>
+<span class="fc" id="L29">    }</span>
+
+    @Override
+    public String generateResponse(UUID userId, UUID sessionId, String message) {
+<span class="fc" id="L33">        List&lt;CbtKnowledgeEntry&gt; matchedEntries = knowledgeBaseLoader.findMatchingEntries(message);</span>
+<span class="fc" id="L34">        String context = contextBuilder.build(</span>
+                message,
+<span class="fc" id="L36">                userId.toString(),</span>
+<span class="fc" id="L37">                sessionId.toString(),</span>
+                matchedEntries
+        );
+
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (matchedEntries.isEmpty()) {</span>
+<span class="fc" id="L42">            return &quot;I hear that this has been difficult. Let's slow the thought down and look for &quot;</span>
+                    + &quot;evidence for and against it. What facts support this thought, and what &quot;
+                    + &quot;facts challenge it? [context=&quot; + context + &quot;]&quot;;
+        }
+
+<span class="fc" id="L47">        CbtKnowledgeEntry primaryMatch = matchedEntries.get(0);</span>
+<span class="fc" id="L48">        String firstPrompt = primaryMatch.reframingPromptSeeds().get(0);</span>
+<span class="fc" id="L49">        return &quot;This sounds connected to &quot; + primaryMatch.name() + &quot;, which can make stress feel &quot;</span>
+<span class="fc" id="L50">                + primaryMatch.description().toLowerCase() + &quot; &quot; + firstPrompt</span>
+                + &quot; [context=&quot; + context + &quot;]&quot;;
+    }
+
+    @Override
+    public ThoughtAnalysisResponse analyzeThought(String thought) {
+<span class="fc" id="L56">        List&lt;CbtKnowledgeEntry&gt; matchedEntries = knowledgeBaseLoader.findMatchingEntries(thought);</span>
+<span class="fc" id="L57">        List&lt;String&gt; distortions = matchedEntries.stream()</span>
+<span class="fc" id="L58">                .map(CbtKnowledgeEntry::name)</span>
+<span class="fc" id="L59">                .distinct()</span>
+<span class="fc" id="L60">                .toList();</span>
+
+<span class="fc" id="L62">        ThoughtAnalysisResponse response = new ThoughtAnalysisResponse();</span>
+<span class="fc" id="L63">        response.setDistortions(</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">                distortions.isEmpty() ? List.of(&quot;no strong distortion detected&quot;) : distortions</span>
+        );
+<span class="fc" id="L66">        response.setReframingPrompts(generateReframingPrompts(thought));</span>
+<span class="fc" id="L67">        return response;</span>
+    }
+
+    @Override
+    public List&lt;String&gt; generateReframingPrompts(String thought) {
+<span class="fc" id="L72">        List&lt;String&gt; prompts = knowledgeBaseLoader.findMatchingEntries(thought)</span>
+<span class="fc" id="L73">                .stream()</span>
+<span class="pc" id="L74">                .flatMap(entry -&gt; entry.reframingPromptSeeds().stream())</span>
+<span class="fc" id="L75">                .distinct()</span>
+<span class="fc" id="L76">                .toList();</span>
+
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (!prompts.isEmpty()) {</span>
+<span class="nc" id="L79">            return prompts;</span>
+        }
+
+<span class="fc" id="L82">        return List.of(</span>
+                &quot;What facts support this thought?&quot;,
+                &quot;What facts challenge this thought?&quot;,
+                &quot;What would a balanced alternative sound like?&quot;
+        );
+    }
+
+    @Override
+    public CrisisResponse detectCrisis(String message) {
+<span class="fc" id="L91">        CrisisAssessmentResult assessment = crisisDetector.detect(message);</span>
+<span class="fc" id="L92">        CrisisResponse response = new CrisisResponse();</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        response.setCrisis(!&quot;none&quot;.equalsIgnoreCase(assessment.riskLevel()));</span>
+<span class="fc" id="L94">        response.setRiskLevel(assessment.riskLevel());</span>
+<span class="fc" id="L95">        response.setKeywordsDetected(assessment.matchedKeywords());</span>
+<span class="fc" id="L96">        response.setAction(assessment.recommendedAction());</span>
+<span class="fc" id="L97">        response.setReasoning(assessment.reasoning());</span>
+<span class="fc" id="L98">        return response;</span>
+    }
+
+    @Override
+    public String generateInsights(UUID userId) {
+<span class="fc" id="L103">        return &quot;Recent entries for user &quot; + userId + &quot; suggest recurring stress themes with &quot;</span>
+                + &quot;opportunities for reframing all-or-nothing thoughts and building flexible &quot;
+                + &quot;coping steps.&quot;;
+    }
+
+    @Override
+    public String summarizeSession(UUID sessionId) {
+<span class="fc" id="L110">        return &quot;Session &quot; + sessionId + &quot; reviewed recent stressors, identified likely cognitive &quot;</span>
+                + &quot;distortions, and generated concrete reframing prompts for follow-up.&quot;;
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
