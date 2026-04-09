@@ -1,5 +1,6 @@
 package com.dta.controller;
 
+import com.dta.dto.response.CopingStrategiesResponse;
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.request.UpdateSafetyPlanRequest;
 import com.dta.dto.response.CrisisResponse;
@@ -35,6 +36,11 @@ public class CrisisController {
     public ResponseEntity<CrisisResponse> detect(
             @Valid @RequestBody DistortionSuggestionRequest request) {
         return ResponseEntity.ok(crisisService.detectCrisis(request));
+    }
+
+    @GetMapping("/coping-strategies")
+    public ResponseEntity<CopingStrategiesResponse> getCopingStrategies() {
+        return ResponseEntity.ok(crisisService.getCopingStrategies());
     }
 
     @GetMapping("/safety-plan")

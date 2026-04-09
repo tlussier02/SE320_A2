@@ -1,5 +1,6 @@
 package com.dta.service.impl;
 
+import com.dta.dto.response.AchievementsResponse;
 import com.dta.dto.response.ProgressResponse;
 import com.dta.repository.DiaryEntryRepository;
 import com.dta.repository.UserSessionRepository;
@@ -85,5 +86,22 @@ class ProgressServiceImplTest {
         
         // The score calculation would be way over 1.0, but it should cap exactly at 1.0
         assertEquals(1.0, response.getScore(), 0.001);
+    }
+
+    @Test
+    void testGetAchievements_ReturnsMilestones() {
+        UUID userId = UUID.randomUUID();
+        when(userSessionRepository.countByUserIdAndStatusIgnoreCase(userId, "COMPLETED")).thenReturn(3L);
+        when(diaryEntryRepository.countByUserId(userId)).thenReturn(5L);
+
+        AchievementsResponse response = progressService.getAchievements(userId);
+
+        assertNotNull(response);
+        assertEquals(userId, response.getUserId());
+        assertEquals(3, response.getCompletedSessions());
+        assertEquals(5, response.getDiaryEntries());
+        assertTrue(response.getAchievements().contains("Built steady session momentum"));
+        assertTrue(response.getAchievements().contains("Maintained a strong reflection habit"));
+        assertEquals("Keep stacking sessions and reflections to sustain recovery progress.", response.getNextMilestone());
     }
 }

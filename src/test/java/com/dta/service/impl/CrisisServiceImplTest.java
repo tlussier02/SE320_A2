@@ -1,5 +1,6 @@
 package com.dta.service.impl;
 
+import com.dta.dto.response.CopingStrategiesResponse;
 import com.dta.ai.CrisisDetector;
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.response.CrisisResponse;
@@ -47,5 +48,15 @@ class CrisisServiceImplTest {
         assertEquals("immediate_intervention", response.getAction());
         
         verify(aiService).detectCrisis(request.getText());
+    }
+
+    @Test
+    void testGetCopingStrategies_ReturnsStrategiesAndResources() {
+        CopingStrategiesResponse response = crisisService.getCopingStrategies();
+
+        assertNotNull(response);
+        assertFalse(response.getStrategies().isEmpty());
+        assertFalse(response.getEmergencyResources().isEmpty());
+        assertTrue(response.getNote().contains("Escalate"));
     }
 }

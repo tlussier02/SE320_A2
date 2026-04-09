@@ -2,6 +2,7 @@ package com.dta.service.impl;
 
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.request.UpdateSafetyPlanRequest;
+import com.dta.dto.response.CopingStrategiesResponse;
 import com.dta.dto.response.CrisisResponse;
 import com.dta.dto.response.SafetyPlanResponse;
 import com.dta.service.AiService;
@@ -39,6 +40,23 @@ public class CrisisServiceImpl implements CrisisService {
     @Override
     public CrisisResponse detectCrisis(DistortionSuggestionRequest request) {
         return aiService.detectCrisis(request.getText());
+    }
+
+    @Override
+    public CopingStrategiesResponse getCopingStrategies() {
+        CopingStrategiesResponse response = new CopingStrategiesResponse();
+        response.setStrategies(List.of(
+                "Use a paced breathing cycle for one minute.",
+                "Name five things you can see, four you can touch, three you can hear.",
+                "Step away from the stressor and message a trusted contact.",
+                "Write one balanced alternative thought before taking the next action."
+        ));
+        response.setEmergencyResources(List.of(
+                "Call or text 988 for the Suicide & Crisis Lifeline.",
+                "Call 911 or go to the nearest emergency room if you are in immediate danger."
+        ));
+        response.setNote("Use these grounding steps for rising distress. Escalate immediately if safety risk increases.");
+        return response;
     }
 
     @Override

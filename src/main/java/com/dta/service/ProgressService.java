@@ -1,5 +1,6 @@
 package com.dta.service;
 
+import com.dta.dto.response.AchievementsResponse;
 import com.dta.dto.response.ProgressResponse;
 import java.util.UUID;
 
@@ -10,4 +11,6 @@ public interface ProgressService {
     ProgressResponse getMonthlyProgress(UUID userId);
 
     ProgressResponse getBurnoutProgress(UUID userId);
+
+    AchievementsResponse getAchievements(UUID userId);
 }

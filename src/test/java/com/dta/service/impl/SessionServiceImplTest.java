@@ -62,6 +62,26 @@ class SessionServiceImplTest {
     }
 
     @Test
+    void testGetSession_ReturnsSessionResponse() {
+        UUID sessionId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UserSession session = new UserSession();
+        session.setId(sessionId);
+        session.setUserId(userId);
+        session.setTitle("Recovery Session");
+        session.setStatus("ACTIVE");
+
+        when(userSessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
+
+        SessionResponse response = sessionService.getSession(sessionId);
+
+        assertNotNull(response);
+        assertEquals(sessionId, response.getSessionId());
+        assertEquals(userId, response.getUserId());
+        assertEquals("Recovery Session", response.getTitle());
+    }
+
+    @Test
     void testChat_WithValidMessage_ReturnsChatResponse() {
         UUID sessionId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
@@ -124,6 +144,14 @@ class SessionServiceImplTest {
         when(userSessionRepository.findById(sessionId)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> sessionService.endSession(sessionId, "Done"));
+    }
+
+    @Test
+    void testGetSession_NotFound_ThrowsException() {
+        UUID sessionId = UUID.randomUUID();
+        when(userSessionRepository.findById(sessionId)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> sessionService.getSession(sessionId));
     }
 
     @Test

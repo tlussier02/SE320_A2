@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface SessionService {
 
+    SessionResponse getSession(UUID sessionId);
+
     SessionResponse startSession(UUID sessionTemplateId, StartSessionRequest request);
 
     ChatResponse chat(UUID sessionId, ChatRequest request);

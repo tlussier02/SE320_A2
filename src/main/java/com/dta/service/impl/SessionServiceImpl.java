@@ -30,6 +30,12 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
+    public SessionResponse getSession(UUID sessionId) {
+        return map(userSessionRepository.findById(sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found.")), null);
+    }
+
+    @Override
     @Transactional
     public SessionResponse startSession(UUID sessionTemplateId, StartSessionRequest request) {
         UserSession session = new UserSession();

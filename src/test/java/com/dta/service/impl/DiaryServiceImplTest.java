@@ -3,6 +3,7 @@ package com.dta.service.impl;
 import com.dta.dto.request.CreateDiaryEntryRequest;
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.response.DiaryEntryResponse;
+import com.dta.dto.response.DiaryInsightsResponse;
 import com.dta.dto.response.ThoughtAnalysisResponse;
 import com.dta.entity.DiaryEntry;
 import com.dta.exception.ResourceNotFoundException;
@@ -86,6 +87,60 @@ class DiaryServiceImplTest {
         assertEquals(1, responses.size());
         assertEquals("Nobody likes me", responses.get(0).getAutomaticThought());
         verify(diaryEntryRepository).findByUserIdOrderByCreatedAtDesc(userId);
+    }
+
+    @Test
+    void testGetDiaryEntry_ReturnsEntry() {
+        UUID entryId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        DiaryEntry entry = new DiaryEntry();
+        entry.setId(entryId);
+        entry.setUserId(userId);
+        entry.setAutomaticThought("I messed everything up");
+        entry.setSuggestedDistortions("Catastrophizing");
+
+        when(diaryEntryRepository.findById(entryId)).thenReturn(Optional.of(entry));
+
+        DiaryEntryResponse response = diaryService.getDiaryEntry(entryId);
+
+        assertNotNull(response);
+        assertEquals(entryId, response.getId());
+        assertEquals("I messed everything up", response.getAutomaticThought());
+        assertEquals(List.of("Catastrophizing"), response.getSuggestedDistortions());
+    }
+
+    @Test
+    void testGetDiaryEntry_WhenNotFound_ThrowsException() {
+        UUID entryId = UUID.randomUUID();
+        when(diaryEntryRepository.findById(entryId)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> diaryService.getDiaryEntry(entryId));
+    }
+
+    @Test
+    void testGetDiaryInsights_ReturnsSummaryAndTopDistortions() {
+        UUID userId = UUID.randomUUID();
+
+        DiaryEntry latest = new DiaryEntry();
+        latest.setAutomaticThought("I always fail");
+        latest.setSuggestedDistortions("All-or-Nothing Thinking, Catastrophizing");
+
+        DiaryEntry older = new DiaryEntry();
+        older.setAutomaticThought("Everyone is judging me");
+        older.setSuggestedDistortions("Catastrophizing, Mind Reading");
+
+        when(diaryEntryRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(List.of(latest, older));
+        when(aiService.generateReframingPrompts("I always fail")).thenReturn(List.of("What facts support this thought?"));
+        when(aiService.generateInsights(userId)).thenReturn("Recurring pressure themes detected.");
+
+        DiaryInsightsResponse response = diaryService.getDiaryInsights(userId);
+
+        assertNotNull(response);
+        assertEquals(userId, response.getUserId());
+        assertEquals(2, response.getEntryCount());
+        assertEquals("Catastrophizing", response.getTopDistortions().get(0));
+        assertEquals(List.of("What facts support this thought?"), response.getReframingPrompts());
+        assertEquals("Recurring pressure themes detected.", response.getInsightSummary());
     }
 
     @Test

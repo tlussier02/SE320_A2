@@ -2,6 +2,7 @@
 
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.request.UpdateSafetyPlanRequest;
+import com.dta.dto.response.CopingStrategiesResponse;
 import com.dta.dto.response.CrisisResponse;
 import com.dta.dto.response.SafetyPlanResponse;
 import com.dta.service.AiService;
@@ -19,43 +20,60 @@ public class CrisisServiceImpl implements CrisisService {
             &quot;1. Pause and breathe.\n2. Contact a trusted person.\n3. Use crisis resources if risk escalates.&quot;;
 
     private final AiService aiService;
-<span class="fc" id="L22">    private final Map&lt;UUID, String&gt; safetyPlans = new ConcurrentHashMap&lt;&gt;();</span>
+<span class="fc" id="L23">    private final Map&lt;UUID, String&gt; safetyPlans = new ConcurrentHashMap&lt;&gt;();</span>
 
-<span class="fc" id="L24">    public CrisisServiceImpl(AiService aiService) {</span>
-<span class="fc" id="L25">        this.aiService = aiService;</span>
-<span class="fc" id="L26">    }</span>
+<span class="fc" id="L25">    public CrisisServiceImpl(AiService aiService) {</span>
+<span class="fc" id="L26">        this.aiService = aiService;</span>
+<span class="fc" id="L27">    }</span>
 
     @Override
     public CrisisResponse getCrisisOverview() {
-<span class="nc" id="L30">        CrisisResponse response = new CrisisResponse();</span>
-<span class="nc" id="L31">        response.setCrisis(false);</span>
-<span class="nc" id="L32">        response.setRiskLevel(&quot;none&quot;);</span>
-<span class="nc" id="L33">        response.setKeywordsDetected(List.of());</span>
-<span class="nc" id="L34">        response.setAction(&quot;none&quot;);</span>
-<span class="nc" id="L35">        response.setReasoning(&quot;No active crisis assessment has been triggered.&quot;);</span>
-<span class="nc" id="L36">        return response;</span>
+<span class="nc" id="L31">        CrisisResponse response = new CrisisResponse();</span>
+<span class="nc" id="L32">        response.setCrisis(false);</span>
+<span class="nc" id="L33">        response.setRiskLevel(&quot;none&quot;);</span>
+<span class="nc" id="L34">        response.setKeywordsDetected(List.of());</span>
+<span class="nc" id="L35">        response.setAction(&quot;none&quot;);</span>
+<span class="nc" id="L36">        response.setReasoning(&quot;No active crisis assessment has been triggered.&quot;);</span>
+<span class="nc" id="L37">        return response;</span>
     }
 
     @Override
     public CrisisResponse detectCrisis(DistortionSuggestionRequest request) {
-<span class="fc" id="L41">        return aiService.detectCrisis(request.getText());</span>
+<span class="fc" id="L42">        return aiService.detectCrisis(request.getText());</span>
+    }
+
+    @Override
+    public CopingStrategiesResponse getCopingStrategies() {
+<span class="fc" id="L47">        CopingStrategiesResponse response = new CopingStrategiesResponse();</span>
+<span class="fc" id="L48">        response.setStrategies(List.of(</span>
+                &quot;Use a paced breathing cycle for one minute.&quot;,
+                &quot;Name five things you can see, four you can touch, three you can hear.&quot;,
+                &quot;Step away from the stressor and message a trusted contact.&quot;,
+                &quot;Write one balanced alternative thought before taking the next action.&quot;
+        ));
+<span class="fc" id="L54">        response.setEmergencyResources(List.of(</span>
+                &quot;Call or text 988 for the Suicide &amp; Crisis Lifeline.&quot;,
+                &quot;Call 911 or go to the nearest emergency room if you are in immediate danger.&quot;
+        ));
+<span class="fc" id="L58">        response.setNote(&quot;Use these grounding steps for rising distress. Escalate immediately if safety risk increases.&quot;);</span>
+<span class="fc" id="L59">        return response;</span>
     }
 
     @Override
     public SafetyPlanResponse getSafetyPlan(UUID userId) {
-<span class="nc" id="L46">        SafetyPlanResponse response = new SafetyPlanResponse();</span>
-<span class="nc" id="L47">        response.setUserId(userId);</span>
-<span class="nc" id="L48">        response.setSafetyPlan(safetyPlans.getOrDefault(userId, DEFAULT_SAFETY_PLAN));</span>
-<span class="nc" id="L49">        return response;</span>
+<span class="nc" id="L64">        SafetyPlanResponse response = new SafetyPlanResponse();</span>
+<span class="nc" id="L65">        response.setUserId(userId);</span>
+<span class="nc" id="L66">        response.setSafetyPlan(safetyPlans.getOrDefault(userId, DEFAULT_SAFETY_PLAN));</span>
+<span class="nc" id="L67">        return response;</span>
     }
 
     @Override
     public SafetyPlanResponse updateSafetyPlan(UpdateSafetyPlanRequest request) {
-<span class="nc" id="L54">        safetyPlans.put(request.getUserId(), request.getSafetyPlan());</span>
-<span class="nc" id="L55">        SafetyPlanResponse response = new SafetyPlanResponse();</span>
-<span class="nc" id="L56">        response.setUserId(request.getUserId());</span>
-<span class="nc" id="L57">        response.setSafetyPlan(request.getSafetyPlan());</span>
-<span class="nc" id="L58">        return response;</span>
+<span class="nc" id="L72">        safetyPlans.put(request.getUserId(), request.getSafetyPlan());</span>
+<span class="nc" id="L73">        SafetyPlanResponse response = new SafetyPlanResponse();</span>
+<span class="nc" id="L74">        response.setUserId(request.getUserId());</span>
+<span class="nc" id="L75">        response.setSafetyPlan(request.getSafetyPlan());</span>
+<span class="nc" id="L76">        return response;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

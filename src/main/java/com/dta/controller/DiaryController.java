@@ -3,6 +3,7 @@ package com.dta.controller;
 import com.dta.dto.request.CreateDiaryEntryRequest;
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.response.DiaryEntryResponse;
+import com.dta.dto.response.DiaryInsightsResponse;
 import com.dta.dto.response.ThoughtAnalysisResponse;
 import com.dta.service.DiaryService;
 import jakarta.validation.Valid;
@@ -41,9 +42,19 @@ public class DiaryController {
         return ResponseEntity.ok(diaryService.getDiaryEntries(userId));
     }
 
-    @DeleteMapping("/entries/{id}")
-    public ResponseEntity<Void> deleteEntry(@PathVariable UUID id) {
-        diaryService.deleteDiaryEntry(id);
+    @GetMapping("/entries/{entryId}")
+    public ResponseEntity<DiaryEntryResponse> getEntry(@PathVariable UUID entryId) {
+        return ResponseEntity.ok(diaryService.getDiaryEntry(entryId));
+    }
+
+    @GetMapping("/insights")
+    public ResponseEntity<DiaryInsightsResponse> getInsights(@RequestParam UUID userId) {
+        return ResponseEntity.ok(diaryService.getDiaryInsights(userId));
+    }
+
+    @DeleteMapping("/entries/{entryId}")
+    public ResponseEntity<Void> deleteEntry(@PathVariable UUID entryId) {
+        diaryService.deleteDiaryEntry(entryId);
         return ResponseEntity.noContent().build();
     }
 

@@ -3,6 +3,7 @@
 import com.dta.dto.request.CreateDiaryEntryRequest;
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.response.DiaryEntryResponse;
+import com.dta.dto.response.DiaryInsightsResponse;
 import com.dta.dto.response.ThoughtAnalysisResponse;
 import com.dta.service.DiaryService;
 import jakarta.validation.Valid;
@@ -26,31 +27,41 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
-<span class="nc" id="L29">    public DiaryController(DiaryService diaryService) {</span>
-<span class="nc" id="L30">        this.diaryService = diaryService;</span>
-<span class="nc" id="L31">    }</span>
+<span class="nc" id="L30">    public DiaryController(DiaryService diaryService) {</span>
+<span class="nc" id="L31">        this.diaryService = diaryService;</span>
+<span class="nc" id="L32">    }</span>
 
     @PostMapping(&quot;/entries&quot;)
     @ResponseStatus(HttpStatus.CREATED)
     public DiaryEntryResponse createEntry(@Valid @RequestBody CreateDiaryEntryRequest request) {
-<span class="nc" id="L36">        return diaryService.createDiaryEntry(request);</span>
+<span class="nc" id="L37">        return diaryService.createDiaryEntry(request);</span>
     }
 
     @GetMapping(&quot;/entries&quot;)
     public ResponseEntity&lt;List&lt;DiaryEntryResponse&gt;&gt; getEntries(@RequestParam UUID userId) {
-<span class="nc" id="L41">        return ResponseEntity.ok(diaryService.getDiaryEntries(userId));</span>
+<span class="nc" id="L42">        return ResponseEntity.ok(diaryService.getDiaryEntries(userId));</span>
     }
 
-    @DeleteMapping(&quot;/entries/{id}&quot;)
-    public ResponseEntity&lt;Void&gt; deleteEntry(@PathVariable UUID id) {
-<span class="nc" id="L46">        diaryService.deleteDiaryEntry(id);</span>
-<span class="nc" id="L47">        return ResponseEntity.noContent().build();</span>
+    @GetMapping(&quot;/entries/{entryId}&quot;)
+    public ResponseEntity&lt;DiaryEntryResponse&gt; getEntry(@PathVariable UUID entryId) {
+<span class="nc" id="L47">        return ResponseEntity.ok(diaryService.getDiaryEntry(entryId));</span>
+    }
+
+    @GetMapping(&quot;/insights&quot;)
+    public ResponseEntity&lt;DiaryInsightsResponse&gt; getInsights(@RequestParam UUID userId) {
+<span class="nc" id="L52">        return ResponseEntity.ok(diaryService.getDiaryInsights(userId));</span>
+    }
+
+    @DeleteMapping(&quot;/entries/{entryId}&quot;)
+    public ResponseEntity&lt;Void&gt; deleteEntry(@PathVariable UUID entryId) {
+<span class="nc" id="L57">        diaryService.deleteDiaryEntry(entryId);</span>
+<span class="nc" id="L58">        return ResponseEntity.noContent().build();</span>
     }
 
     @PostMapping(&quot;/distortions/suggest&quot;)
     public ResponseEntity&lt;ThoughtAnalysisResponse&gt; suggest(
             @Valid @RequestBody DistortionSuggestionRequest request) {
-<span class="nc" id="L53">        return ResponseEntity.ok(diaryService.suggestDistortions(request));</span>
+<span class="nc" id="L64">        return ResponseEntity.ok(diaryService.suggestDistortions(request));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

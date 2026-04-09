@@ -3,6 +3,7 @@ package com.dta.service.impl;
 import com.dta.dto.request.CreateDiaryEntryRequest;
 import com.dta.dto.request.DistortionSuggestionRequest;
 import com.dta.dto.response.DiaryEntryResponse;
+import com.dta.dto.response.DiaryInsightsResponse;
 import com.dta.dto.response.ThoughtAnalysisResponse;
 import com.dta.entity.DiaryEntry;
 import com.dta.exception.ResourceNotFoundException;
@@ -12,7 +13,9 @@ import com.dta.service.DiaryService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +52,42 @@ public class DiaryServiceImpl implements DiaryService {
                 .stream()
                 .map(this::map)
                 .toList();
+    }
+
+    @Override
+    public DiaryEntryResponse getDiaryEntry(UUID id) {
+        return map(diaryEntryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Diary entry not found.")));
+    }
+
+    @Override
+    public DiaryInsightsResponse getDiaryInsights(UUID userId) {
+        List<DiaryEntry> entries = diaryEntryRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        List<String> topDistortions = entries.stream()
+                .map(DiaryEntry::getSuggestedDistortions)
+                .flatMap(raw -> split(raw).stream())
+                .collect(java.util.stream.Collectors.groupingBy(
+                        Function.identity(),
+                        java.util.stream.Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                .limit(3)
+                .map(Map.Entry::getKey)
+                .toList();
+
+        String promptSource = entries.stream()
+                .map(DiaryEntry::getAutomaticThought)
+                .findFirst()
+                .orElse("stress and recovery");
+
+        DiaryInsightsResponse response = new DiaryInsightsResponse();
+        response.setUserId(userId);
+        response.setEntryCount(entries.size());
+        response.setTopDistortions(topDistortions);
+        response.setReframingPrompts(aiService.generateReframingPrompts(promptSource));
+        response.setInsightSummary(aiService.generateInsights(userId));
+        return response;
     }
 
     @Override

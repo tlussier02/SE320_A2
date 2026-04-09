@@ -1,5 +1,6 @@
 package com.dta.controller;
 
+import com.dta.dto.response.AchievementsResponse;
 import com.dta.dto.response.ProgressResponse;
 import com.dta.service.ProgressService;
 import java.util.UUID;
@@ -32,5 +33,10 @@ public class ProgressController {
     @GetMapping("/burnout")
     public ResponseEntity<ProgressResponse> burnout(@RequestParam UUID userId) {
         return ResponseEntity.ok(progressService.getBurnoutProgress(userId));
+    }
+
+    @GetMapping("/achievements")
+    public ResponseEntity<AchievementsResponse> achievements(@RequestParam UUID userId) {
+        return ResponseEntity.ok(progressService.getAchievements(userId));
     }
 }
