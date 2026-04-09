@@ -1,0 +1,21 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(patient, "Patient", "Seeking CBT support.")
+Person(therapist, "Therapist", "Reviews patient progress.")
+Person(admin, "Administrator", "Manages system health.")
+
+System(dta, "Digital Therapy Assistant", "Provides AI-powered CBT tools.")
+
+System_Ext(openai, "OpenAI API", "LLM Provider for analysis.")
+System_Ext(email, "Email Service", "Sends notifications.")
+System_Ext(ehr, "EHR System", "Stores medical records.")
+
+Rel(patient, dta, "Uses CLI to record thoughts")
+Rel(therapist, dta, "Monitors patient sessions")
+Rel(admin, dta, "Maintains system")
+
+Rel(dta, openai, "Sends thoughts for analysis")
+Rel(dta, email, "Sends alerts")
+Rel(dta, ehr, "Syncs patient data")
+@enduml
